@@ -36,6 +36,8 @@ def missionThread(VecCon, Target, payloadDeployed, q_lock, scrQueue):
             pass
     with q_lock:
         scrQueue.put(['EntryStatus','Mission exiting'])
+    VecCon.disconnectMAV()
+    VecCon = None
         
 def time2fall(alt):
     if(alt > 0):

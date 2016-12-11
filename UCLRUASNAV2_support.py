@@ -65,31 +65,37 @@ def destroy_window():
 def startMission():
     global q_lock, onMission, VecCon
     missionNo = missiontype.get()
+
     if(missionNo == 1 and onMission!= True):
         onMission = True
         GPSTarget = [-35.3615286,149.1617417]
-        print 'starting mission'
+        print 'Starting mission'
         with q_lock:
             scrQueue.put(['EntryStatus','Starting payload mission'])
+            
         VecCon = startMAVComms()
+            
         if(VecCon is not None):
             with q_lock:
                 scrQueue.put(['EntryStatus','Initialising mission thread'])
             global payloadDeployed
             payloadDeployed = threading.Event()
-            missionPayload.startMission(VecCon, GPSTarget, payloadDeployed,q_lock, scrQueue)
-            missionThread = threading.Thread(name= 'currMission', target=missionReply, args=(payloadDeployed,))
+            missionPayload.startMission(VecCon, GPSTarget, payloadDeployed, q_lock, scrQueue)
+            missionThread = threading.Thread(name= 'currMission', target=missionReply, args=(payloadDeployed, VecCon))
             missionThread.setDaemon(True) #ie when the module exits: kill thread
             missionThread.start()
         else:
             print('Could not connect to MAV')
             onMission = False
+    
 
 def stopMission():
-    global payloadDeployed
-    payloadDeployed.set()
-
-def missionReply(payloadDeployed):
+    global payloadDeployed, onMission
+    if(onMission):
+        payloadDeployed.set()
+    
+def missionReply(payloadDeployed, VecCon):
+    global onMission
     #uses threading event to wait for payload to be deployed
     payloadDeployed.wait()
     #gives time for the mission thread to exit (max 0.5 seconds)
@@ -102,12 +108,21 @@ def missionReply(payloadDeployed):
         scrQueue.put(['EntryY1',''])
         scrQueue.put(['EntryTotal1',''])
 
+    onMission = False
+
 def startMAVComms():
-    VecCon = MAVComms.MAVconnect('udp:127.0.0.1:14552')
-    if(VecCon.ConnErrFlag != True):
+    with q_lock:
+        scrQueue.put(['EntryStatus', 'Attempting to connect'])
+        
+    NewConnection = MAVComms.MAVconnect('udp:127.0.0.1:14551') 
+    while(NewConnection.Connecting):
+        #waiting to finish connecting
+        pass
+        
+    if(NewConnection.ConnErrFlag != True):
         with q_lock:
             scrQueue.put(['EntryStatus','Connected to MAV'])
-        return VecCon
+        return NewConnection
     else:
         with q_lock:
             scrQueue.put(['EntryStatus','Error connecting to MAV'])
