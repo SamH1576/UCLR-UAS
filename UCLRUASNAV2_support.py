@@ -39,7 +39,7 @@ def setupScreenUpdating():
     #set q_lock to prevent multiple routines updating the queue at the same time
     q_lock = threading.Lock()
     #start a thread to deal with updating the GUI
-    scrThread = threading.Thread(target=screenUpdates)
+    scrThread = threading.Thread(name='ScreenUpdates', target=screenUpdates)
     scrThread.setDaemon(True) #ie when the module exits: kill thread
     scrThread.start()
     with q_lock:
@@ -63,32 +63,47 @@ def destroy_window():
     top_level = None
 
 def startMission():
-    global q_lock, onMission
+    global q_lock, onMission, VecCon
     missionNo = missiontype.get()
     if(missionNo == 1 and onMission!= True):
-        print 'starting mission'
         onMission = True
+        GPSTarget = [-35.3615286,149.1617417]
+        print 'starting mission'
         with q_lock:
             scrQueue.put(['EntryStatus','Starting payload mission'])
         VecCon = startMAVComms()
         if(VecCon is not None):
-            missionPayload.startMission(VecCon, GPSTarget)
-            missionThread = threading.Thread(target=missionReply)
+            with q_lock:
+                scrQueue.put(['EntryStatus','Initialising mission thread'])
+            global payloadDeployed
+            payloadDeployed = threading.Event()
+            missionPayload.startMission(VecCon, GPSTarget, payloadDeployed,q_lock, scrQueue)
+            missionThread = threading.Thread(name= 'currMission', target=missionReply, args=(payloadDeployed,))
             missionThread.setDaemon(True) #ie when the module exits: kill thread
             missionThread.start()
         else:
             print('Could not connect to MAV')
+            onMission = False
 
-def missionReply(mission):
-    while(missionPayload.dropped == False):
-        time.sleep(1)
-        pass
-    
+def stopMission():
+    global payloadDeployed
+    payloadDeployed.set()
+
+def missionReply(payloadDeployed):
+    #uses threading event to wait for payload to be deployed
+    payloadDeployed.wait()
+    #gives time for the mission thread to exit (max 0.5 seconds)
+    time.sleep(0.6)
+    payloadDeployed.clear()
+    updatestring = 'Payload Deployed/Exited: ' + time.strftime("%H:%M:%S")
     with q_lock:
-        scrQueue.put(['EntryStatus','Payload Deployed'])
+        scrQueue.put(['EntryStatus',updatestring])
+        scrQueue.put(['EntryX1',''])
+        scrQueue.put(['EntryY1',''])
+        scrQueue.put(['EntryTotal1',''])
 
 def startMAVComms():
-    VecCon = MAVComms.MAVconnect('udp:127.0.0.1:14551')
+    VecCon = MAVComms.MAVconnect('udp:127.0.0.1:14552')
     if(VecCon.ConnErrFlag != True):
         with q_lock:
             scrQueue.put(['EntryStatus','Connected to MAV'])

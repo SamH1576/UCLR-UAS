@@ -64,7 +64,7 @@ class UCLRUASNAV:
 
         self.MissionsLabel = Label(top)
         #self.MissionsLabel.place(relx=0.06, rely=0.04, height=21, width=52)
-        self.MissionsLabel.grid(row=0)
+        self.MissionsLabel.grid(row=0, column=0, sticky=W)
         self.MissionsLabel.configure(background="#d9d9d9")
         self.MissionsLabel.configure(disabledforeground="#a3a3a3")
         self.MissionsLabel.configure(foreground="#000000")
@@ -73,11 +73,11 @@ class UCLRUASNAV:
         self.MissionFrame = Frame(top)
         #self.MissionFrame.place(relx=0.06, rely=0.13, relheight=0.19
         #       , relwidth=0.73)
-        self.MissionFrame.grid(row=1)
+        self.MissionFrame.grid(row=1, column=0, sticky=W+E)
         self.MissionFrame.configure(relief=GROOVE)
         self.MissionFrame.configure(borderwidth="2")
         self.MissionFrame.configure(background="#d9d9d9")
-        self.MissionFrame.configure(width=235)
+        self.MissionFrame.configure(width=320)
 
         self.Payload = Radiobutton(self.MissionFrame)
         #self.Payload.place(relx=0.04, rely=0.22, relheight=0.56, relwidth=0.3)
@@ -127,7 +127,7 @@ class UCLRUASNAV:
         self.PayloadFrame = Frame(top)
         #self.PayloadFrame.place(relx=0.06, rely=0.33, relheight=0.4
         #        , relwidth=0.73)
-        self.PayloadFrame.grid(row=2,sticky=w)
+        self.PayloadFrame.grid(row=2,sticky=W+E)
         self.PayloadFrame.configure(relief=GROOVE)
         self.PayloadFrame.configure(borderwidth="2")
         self.PayloadFrame.configure(relief=GROOVE)
@@ -136,7 +136,7 @@ class UCLRUASNAV:
 
         self.DistLabel = Message(self.PayloadFrame)
         #self.DistLabel.place(relx=0.21, rely=0.02, relheight=0.24, relwidth=0.51)
-        self.DistLabel.grid(row=2, column=1,columnspan=2)
+        self.DistLabel.grid(row=2, column=0, columnspan=2)
         self.DistLabel.configure(background="#d9d9d9")
         self.DistLabel.configure(foreground="#000000")
         self.DistLabel.configure(highlightbackground="#d9d9d9")
@@ -146,7 +146,7 @@ class UCLRUASNAV:
 
         self.DistX1 = Message(self.PayloadFrame)
         #self.DistX1.place(relx=0.09, rely=0.23, relheight=0.24, relwidth=0.09)
-        self.DistX1.grid(row=3, column=1)        
+        self.DistX1.grid(row=3, column=0)        
         self.DistX1.configure(background="#d9d9d9")
         self.DistX1.configure(foreground="#000000")
         self.DistX1.configure(highlightbackground="#d9d9d9")
@@ -156,7 +156,7 @@ class UCLRUASNAV:
 
         self.EntryX1 = Entry(self.PayloadFrame)
         #self.EntryX1.place(relx=0.17, rely=0.25, relheight=0.21, relwidth=0.61)
-        self.EntryX1.grid(row=3, column=2, padx=10)
+        self.EntryX1.grid(row=3, column=1, padx=10)
         self.EntryX1.configure(background="white")
         self.EntryX1.configure(disabledforeground="#a3a3a3")
         self.EntryX1.configure(font="TkFixedFont")
@@ -169,7 +169,7 @@ class UCLRUASNAV:
 
         self.DistY1 = Message(self.PayloadFrame)
         #self.DistY1.place(relx=0.09, rely=0.44, relheight=0.24, relwidth=0.09)
-        self.DistY1.grid(row=4, column=1)
+        self.DistY1.grid(row=4, column=0)
         self.DistY1.configure(background="#d9d9d9")
         self.DistY1.configure(foreground="#000000")
         self.DistY1.configure(highlightbackground="#d9d9d9")
@@ -179,7 +179,7 @@ class UCLRUASNAV:
 
         self.EntryY1 = Entry(self.PayloadFrame)
         #self.EntryY1.place(relx=0.17, rely=0.46, relheight=0.21, relwidth=0.61)
-        self.EntryY1.grid(row=4, column=2)
+        self.EntryY1.grid(row=4, column=1)
         self.EntryY1.configure(background="white")
         self.EntryY1.configure(disabledforeground="#a3a3a3")
         self.EntryY1.configure(font="TkFixedFont")
@@ -192,7 +192,7 @@ class UCLRUASNAV:
 
         self.DistTotal1 = Message(self.PayloadFrame)
         #self.DistTotal1.place(relx=0.0, rely=0.65, relheight=0.24, relwidth=0.17)
-        self.DistTotal1.grid(row=5, column=1)
+        self.DistTotal1.grid(row=5, column=0)
         self.DistTotal1.configure(background="#d9d9d9")
         self.DistTotal1.configure(foreground="#000000")
         self.DistTotal1.configure(highlightbackground="#d9d9d9")
@@ -203,7 +203,7 @@ class UCLRUASNAV:
         self.EntryTotal1 = Entry(self.PayloadFrame)
         #self.EntryTotal1.place(relx=0.17, rely=0.67, relheight=0.21
         #        , relwidth=0.61)
-        self.EntryTotal1.grid(row=5, column=2)
+        self.EntryTotal1.grid(row=5, column=1)
         self.EntryTotal1.configure(background="white")
         self.EntryTotal1.configure(disabledforeground="#a3a3a3")
         self.EntryTotal1.configure(font="TkFixedFont")
@@ -225,7 +225,7 @@ class UCLRUASNAV:
 
         self.StatusLabel = Label(self.StatusFrame)
         #self.StatusLabel.place(relx=0.03, rely=0.77, height=21, width=41)
-        self.StatusLabel.grid(row=6, sticky=W+E+N+S)
+        self.StatusLabel.grid(row=6, column=0)
         self.StatusLabel.configure(activebackground="#f9f9f9")
         self.StatusLabel.configure(activeforeground="black")
         self.StatusLabel.configure(background="#d9d9d9")
@@ -238,7 +238,7 @@ class UCLRUASNAV:
         self.EntryStatus = Text(self.StatusFrame)
         #self.EntryStatus.place(relx=0.16, rely=0.75, relheight=0.23
         #        , relwidth=0.51)
-        self.EntryStatus.grid(row=6, column=2,sticky=w)
+        self.EntryStatus.grid(row=6, column=1, columnspan=2,sticky=W)
         self.EntryStatus.configure(background="white")
         self.EntryStatus.configure(font="TkTextFont")
         self.EntryStatus.configure(foreground="black")
@@ -249,10 +249,18 @@ class UCLRUASNAV:
         self.EntryStatus.configure(selectforeground="black")
         self.EntryStatus.configure(width=35, height=2)
         self.EntryStatus.configure(wrap=WORD)
+
+        self.BtnFrame = Frame(top)
+        #self.StatusFrame.place(relx=0.06, rely=0.33, relheight=0.4
+        #        , relwidth=0.73)
+        self.BtnFrame.grid(row=7, sticky=E)
+        self.BtnFrame.configure(relief=GROOVE)
+        self.BtnFrame.configure(borderwidth="2")
+        self.BtnFrame.configure(background="#d9d9d9")
         
-        self.btnProgram = Button(top)
+        self.btnProgram = Button(self.BtnFrame)
         #self.btnProgram.place(relx=0.69, rely=0.88, height=24, width=57)
-        self.btnProgram.grid(row=7)
+        self.btnProgram.grid(row=7,column=0)
         self.btnProgram.configure(activebackground="#d9d9d9")
         self.btnProgram.configure(activeforeground="#000000")
         self.btnProgram.configure(background="#d9d9d9")
@@ -262,11 +270,25 @@ class UCLRUASNAV:
         self.btnProgram.configure(highlightbackground="#d9d9d9")
         self.btnProgram.configure(highlightcolor="black")
         self.btnProgram.configure(pady="0")
-        self.btnProgram.configure(text='''Program''')
+        self.btnProgram.configure(text='''Start Program''')
 
-        self.btnQuit = Button(top)
+        self.btnStopProgram = Button(self.BtnFrame)
+        #self.btnStopProgram.place(relx=0.69, rely=0.88, height=24, width=57)
+        self.btnStopProgram.grid(row=7,column=1)
+        self.btnStopProgram.configure(activebackground="#d9d9d9")
+        self.btnStopProgram.configure(activeforeground="#000000")
+        self.btnStopProgram.configure(background="#d9d9d9")
+        self.btnStopProgram.configure(command=UCLRUASNAV2_support.stopMission)
+        self.btnStopProgram.configure(disabledforeground="#a3a3a3")
+        self.btnStopProgram.configure(foreground="#000000")
+        self.btnStopProgram.configure(highlightbackground="#d9d9d9")
+        self.btnStopProgram.configure(highlightcolor="black")
+        self.btnStopProgram.configure(pady="0")
+        self.btnStopProgram.configure(text='''Stop Program''')
+
+        self.btnQuit = Button(self.BtnFrame)
         #self.btnQuit.place(relx=0.88, rely=0.88, height=24, width=34)
-        self.btnQuit.grid(row=7,column=1)
+        self.btnQuit.grid(row=7,column=2)
         self.btnQuit.configure(activebackground="#d9d9d9")
         self.btnQuit.configure(activeforeground="#000000")
         self.btnQuit.configure(background="#d9d9d9")
