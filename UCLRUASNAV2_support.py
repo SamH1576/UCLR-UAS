@@ -111,9 +111,6 @@ def missionReply(payloadDeployed, VecCon):
     onMission = False
 
 def startMAVComms():
-    with q_lock:
-        scrQueue.put(['EntryStatus', 'Attempting to connect'])
-        
     NewConnection = MAVComms.MAVconnect('udp:127.0.0.1:14551') 
     while(NewConnection.Connecting):
         #waiting to finish connecting
@@ -148,7 +145,18 @@ def screenUpdates():
                     elementToUpdate.delete(0, END)
                     elementToUpdate.insert(0, data[1])
             if data == 'quit':
-                break 
+                break
+
+def changeMissionScreen(widget):
+    global w
+    if(widget["text"] == 'Payload'):
+        w.PayloadFrame.grid(row=2,sticky=W+E)
+    elif(widget["text"] == 'Recon'):
+        w.PayloadFrame.grid_forget()
+        ##NOTE THE FOLLOW IS IN THE WRONG PLACE
+        w.TargetsFrame.grid(row=2,sticky=W+E)
+    elif(widget["text"] == 'Enduro'):
+        w.PayloadFrame.grid_forget()
 
 if __name__ == '__main__':
     import UCLRUASNAV2

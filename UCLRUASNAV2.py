@@ -93,6 +93,7 @@ class UCLRUASNAV:
         self.Payload.configure(text='''Payload''')
         self.Payload.configure(value="1")
         self.Payload.configure(variable=UCLRUASNAV2_support.missiontype)
+        self.Payload.configure(command = lambda : UCLRUASNAV2_support.changeMissionScreen(self.Payload))
 
         self.Recon = Radiobutton(self.MissionFrame)
         #self.Recon.place(relx=0.38, rely=0.22, relheight=0.56, relwidth=0.26)
@@ -108,6 +109,7 @@ class UCLRUASNAV:
         self.Recon.configure(text='''Recon''')
         self.Recon.configure(value="2")
         self.Recon.configure(variable=UCLRUASNAV2_support.missiontype)
+        self.Recon.configure(command = lambda : UCLRUASNAV2_support.changeMissionScreen(self.Recon))       
 
         self.Enduro = Radiobutton(self.MissionFrame)
         #self.Enduro.place(relx=0.68, rely=0.22, relheight=0.56, relwidth=0.28)
@@ -123,7 +125,66 @@ class UCLRUASNAV:
         self.Enduro.configure(text='''Enduro''')
         self.Enduro.configure(value="3")
         self.Enduro.configure(variable=UCLRUASNAV2_support.missiontype)
+        self.Enduro.configure(command = lambda : UCLRUASNAV2_support.changeMissionScreen(self.Enduro))
 
+        ################################################################################################
+        #   Target Frame
+        ################################################################################################
+
+        self.TargetsFrame = Frame(top)
+        #self.PayloadFrame.grid(row=2,sticky=W+E)
+        self.TargetsFrame.configure(relief=GROOVE)
+        self.TargetsFrame.configure(borderwidth="2")
+        self.TargetsFrame.configure(relief=GROOVE)
+        self.TargetsFrame.configure(background="#d9d9d9")
+        self.TargetsFrame.configure(width=235)
+
+        self.TargetLabel1 = Message(self.TargetsFrame)
+        self.TargetLabel1.grid(row=3, column=0)        
+        self.TargetLabel1.configure(background="#d9d9d9")
+        self.TargetLabel1.configure(foreground="#000000")
+        self.TargetLabel1.configure(highlightbackground="#d9d9d9")
+        self.TargetLabel1.configure(highlightcolor="black")
+        self.TargetLabel1.configure(text='''T1:''')
+        self.TargetLabel1.configure(width=20)
+
+        self.TargetEntry1 = Entry(self.TargetsFrame)
+        self.TargetEntry1.grid(row=3, column=1, padx=10)
+        self.TargetEntry1.configure(background="white")
+        self.TargetEntry1.configure(disabledforeground="#a3a3a3")
+        self.TargetEntry1.configure(font="TkFixedFont")
+        self.TargetEntry1.configure(foreground="#000000")
+        self.TargetEntry1.configure(highlightbackground="#d9d9d9")
+        self.TargetEntry1.configure(highlightcolor="black")
+        self.TargetEntry1.configure(insertbackground="black")
+        self.TargetEntry1.configure(selectbackground="#c4c4c4")
+        self.TargetEntry1.configure(selectforeground="black")
+
+        self.TargetLabel2 = Message(self.TargetsFrame)
+        self.TargetLabel2.grid(row=4, column=0)        
+        self.TargetLabel2.configure(background="#d9d9d9")
+        self.TargetLabel2.configure(foreground="#000000")
+        self.TargetLabel2.configure(highlightbackground="#d9d9d9")
+        self.TargetLabel2.configure(highlightcolor="black")
+        self.TargetLabel2.configure(text='''T2:''')
+        self.TargetLabel2.configure(width=20)
+
+        self.TargetEntry2 = Entry(self.TargetsFrame)
+        self.TargetEntry2.grid(row=4, column=1, padx=10)
+        self.TargetEntry2.configure(background="white")
+        self.TargetEntry2.configure(disabledforeground="#a3a3a3")
+        self.TargetEntry2.configure(font="TkFixedFont")
+        self.TargetEntry2.configure(foreground="#000000")
+        self.TargetEntry2.configure(highlightbackground="#d9d9d9")
+        self.TargetEntry2.configure(highlightcolor="black")
+        self.TargetEntry2.configure(insertbackground="black")
+        self.TargetEntry2.configure(selectbackground="#c4c4c4")
+        self.TargetEntry2.configure(selectforeground="black")
+
+        ################################################################################################
+        #   Payload Frame
+        ################################################################################################
+        
         self.PayloadFrame = Frame(top)
         #self.PayloadFrame.place(relx=0.06, rely=0.33, relheight=0.4
         #        , relwidth=0.73)

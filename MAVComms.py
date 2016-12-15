@@ -14,7 +14,9 @@ class MAVconnect:
     def startConnThread(self):  
         connectThread = threading.Thread(name= 'connectThread', target=self.connectVehicle)
         connectThread.setDaemon(True) #ie when the module exits: kill thread
-        connectThread.start()        
+        connectThread.start()
+        #wait for thread to return
+        connectThread.join()
 
     def connectVehicle(self):
         self.Connecting = True

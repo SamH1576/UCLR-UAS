@@ -46,7 +46,7 @@ def time2fall(alt):
         return 0.1
     
 def time2target(hypdist, vel):
-    if(vel != 0):
+    if(vel > 0):
         return(hypdist/vel)
     else:
         return 0.1
