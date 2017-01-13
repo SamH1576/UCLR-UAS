@@ -1,0 +1,8 @@
+Packages
+numpy
+opencv
+tesseract-ocr
+pip install pytesseract
+apt-get install python-imaging
+apt-get install python-imaging-tk
+
