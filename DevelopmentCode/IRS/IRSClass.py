@@ -18,8 +18,10 @@ class detectTarget:
                 #declare frame counter
                 self.frameCount = 0
                 #declare bounds for detection colours
-                self.redLower = (0,100,100)
-                self.redUpper = (10,255,255)
+                self.redLower1 = (0,100,100)
+                self.redUpper1 = (10,255,255)
+		self.redLower2 = (170,100,100)
+		self.redUpper2 = (180,255,255)
                 #declare video source for PC
                 #self.camera = cv2.VideoCapture(0)
 
@@ -45,7 +47,9 @@ class detectTarget:
                 #- median blur for salt and pepper noise
                 frame = cv2.medianBlur(frame, 5)
                 #drop pixels out of range
-                frame = cv2.inRange(frame, self.redLower, self.redUpper)
+                mask1 = cv2.inRange(frame, self.redLower1, self.redUpper1)
+		mask2 = cv2.inRange(frame, self.redLower2, self.redUpper2)
+		frame = mask1 + mask2 
                 #erode
                 frame = cv2.erode(frame, None, iterations=2)
                 #dilate
@@ -104,7 +108,7 @@ class detectTarget:
                 img = enhancer.enhance(2)
 
                 #save the frame to be run through OCR later
-                savestring = 'images/toDetect'+str(self.frameCount)+'.jpg'
+                savestring = 'DevelopmentCode/IRS/images/toDetect'+str(self.frameCount)+'.jpg'
                 img.save(savestring)
                 print 'image saved as ' + savestring
                 
@@ -113,7 +117,7 @@ class detectTarget:
                 print 'running OCR'
                 for x in xrange(0, self.frameCount, 5):
                         try:
-                                text= pytesseract.image_to_string(Image.open('images/toDetect'+str(x)+'.jpg'),config='-psm 10')
+                                text= pytesseract.image_to_string(Image.open('DevelopmentCode/IRS/images/toDetect'+str(x)+'.jpg'),config='-psm 10')
                         except IOError:
                                 print 'file doesn\'t exist' + 'images/toDetect'+str(x)+'.jpg' 
                                 #try the name file, ie next x
@@ -125,7 +129,7 @@ class detectTarget:
                 character =  Counter(self.detectedCharacters).most_common(1)
                 if(character[0][0] != ''):
                         print(character[0][0])
-                else:
+                elif(len(character)>1):
                         print(character[1][0])
                 
                 if(cleanUp):
@@ -146,7 +150,6 @@ class detectTarget:
 
 def main():
         d = detectTarget()
-        print d.frameCount
         #PC Version
         #while True:
                 #(grabbed, frame) = d.camera.read()

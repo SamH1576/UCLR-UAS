@@ -218,3 +218,6 @@ pip-log.txt
 #Image Files
 *.jpg
 *.png
+
+#Compiled python
+*.pyc
