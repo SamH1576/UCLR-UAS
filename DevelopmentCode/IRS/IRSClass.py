@@ -91,14 +91,16 @@ class detectTarget:
                 centre = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
                 area = M["m00"]
                 if(area>200):
-                        if(centre[0]>(orig.shape[1]/2)): 
-                                self.position += -5
+                        if(centre[0]>((orig.shape[1]/2)*1.05)): 
+                                self.position += -1
                                 self.m.move_to(self.position)
                                 print("Move right")
-                        else:
-                                self.position += 5
+                        elif(centre[0]<((orig.shape[1]/2)*0.95)):
+                                self.position += 1
                                 self.m.move_to(self.position)
                                 print("Move left")
+                        else:
+                                print("Centred")
                         return True
                 else:
                         return False
@@ -107,10 +109,11 @@ class detectTarget:
                 warped = transform.four_point_transform(frame, contours.reshape(4, 2)) #* ratio)
                 #warped = cv2.bitwise_not(warped)       
                 #warped = adjust_gamma.adjust_gamma(warped, 0.7)
+                warped = cv2.blur(warped,(5,5))
                 warped = cv2.GaussianBlur(warped,(5,5),0)
                 #warped = ImageEnhance.Contrast(warped)
                 #warped = enhancer.enhance(2)
-                warped = cv2.adaptiveThreshold(warped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
+                warped = cv2.adaptiveThreshold(warped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,9,1)
                 #cv2.imwrite('toDetect.jpg', warped)
                 img = Image.fromarray(warped)
                 enhancer = ImageEnhance.Contrast(img)
@@ -120,9 +123,9 @@ class detectTarget:
                 savestring = 'DevelopmentCode/IRS/images/toDetect'+str(self.frameCount)+'.jpg'
                 img.save(savestring)
                 print 'image saved as ' + savestring
+
                 
-                
-        def runOCR(self, cleanUp):
+        def runOCR(self):
                 print 'running OCR'
                 for x in xrange(0, self.frameCount, 5):
                         try:
@@ -140,23 +143,22 @@ class detectTarget:
                         print(character[0][0])
                 elif(len(character)>1):
                         print(character[1][0])
-                
-                if(cleanUp):
-                        cleanImagesFolder()
-                        self.frameCount = 0
-                        
-        def cleanImagesFolder():
-                folder = 'images'
+
+
+
+        def cleanImagesFolder(self):
+                folder = 'DevelopmentCode/IRS/images'
                 for the_file in os.listdir(folder):
                         file_path= os.path.join(folder, the_file)
                 try:
                         if os.path.isfile(file_path):
                                         os.unlink(file_path)
                         #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+                        self.frameCount = 0
                 except Exception as e:
                         print(e)
-                
 
+ 
 def main():
         d = detectTarget()
         #PC Version
@@ -172,7 +174,6 @@ def main():
                 targetContour = d.findContour(frame)
                 if(targetContour is not None):
                         if(d.processContour(targetContour, original)):
-                                pass
                                 if(d.frameCount % 5 == 0):
                                         d.adjustAndRecordFrame(grayscale[2], targetContour)
                                 d.frameCount += 1
@@ -186,8 +187,8 @@ def main():
                 d.rawCapture.truncate(0)
         
         cv2.destroyAllWindows()
-        d.runOCR(False)
         d.m.move_to(0)
+        d.runOCR()
         time.sleep(3)
         d = None
         
