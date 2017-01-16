@@ -10,6 +10,7 @@ from PIL import Image, ImageEnhance, ImageFilter
 from collections import Counter
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from stepper import Motor
 
 class detectTarget:
         def __init__(self):
@@ -24,6 +25,12 @@ class detectTarget:
 		self.redUpper2 = (180,255,255)
                 #declare video source for PC
                 #self.camera = cv2.VideoCapture(0)
+
+                #set up motor control
+                self.m = Motor([18,22,24,26])                
+                self.m.rpm = 5
+                #set initialposition
+                self.position = 0
 
                 #declare video source for RPi
                 self.camera = PiCamera()
@@ -85,10 +92,12 @@ class detectTarget:
                 area = M["m00"]
                 if(area>200):
                         if(centre[0]>(orig.shape[1]/2)): 
-                                #move camera right
+                                self.position += -5
+                                self.m.move_to(self.position)
                                 print("Move right")
                         else:
-                                #move camera left
+                                self.position += 5
+                                self.m.move_to(self.position)
                                 print("Move left")
                         return True
                 else:
@@ -178,7 +187,10 @@ def main():
         
         cv2.destroyAllWindows()
         d.runOCR(False)
+        d.m.move_to(0)
+        time.sleep(3)
         d = None
+        
         
         
 #if module is being run stand alone, run the following
