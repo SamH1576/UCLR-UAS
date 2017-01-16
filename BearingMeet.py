@@ -1,6 +1,5 @@
 import numpy
-import GPSdatafromAP
-from collections import deque
+#from collections import deque
 
 class estiPosition:
     def __init__(self, VecConn):
@@ -11,20 +10,25 @@ class estiPosition:
         #first -> arrPos.append([]) adds another row
         #then arrPos[i].append("foo") adds item "foo" in arrPos[i][0]
         #e.arrPos[i].append("bar") adds item "bar" in arrPos[i][1]
+
+        #connection which is passed to the class
         self.MAVcomms = VecConn
 
     def main(self):
-        print 'main'
-        #get current position
-        currPos = VecConn.getGPSdata()
-        
-        #if it's the first position wait for a second reading (len(e.arrPos)) > 1)
-        if(len(self.arrPos)>1):
-            #do something
-            pass
-        #check vehicle attitude (if turning don't try and get a reading) dx/dt or dy/dt > 1
-        #check camera - is target sighted and centred?
-        #if yes record current GPS positon, camera servo position and heading (vehicle.heading)
+        print 'Start Position Estimation'
+        dataCollectionActive = True
+
+        #collect data points
+        while dataCollectionActive = True:
+            #get current position
+            currPos = self.MAVcomms.getGPSdata()
+            currAtt = self.MAVcomms.getAttitude()
+            
+            #check vehicle attitude (if turning don't try and get a reading) dx/dt or dy/dt > 1
+            if(abs(self.MAVcomms.MAVData['ROLL'])<0.175 and abs(self.MAVcomms.MAVData['PITCH'])<0.175)
+            #check camera - is target sighted and centred?
+            #if yes record current GPS positon, camera servo position and heading (vehicle.heading)
+            
         #if there are two readings, compare reading 1 to reading 2 (Or 1-2, 1-3, 1-4 etc for good average?)
         #record estimate GPS pposition of target
         
@@ -84,6 +88,7 @@ class estiPosition:
 ##    e.arrPos[i].append(2)
 ##
 ##for j in range(len(e.arrPos)):
+##    print e.arrPos[j][0]
 ##    print e.arrPos[j][1]
 
 ###Used to test the function    
@@ -101,7 +106,7 @@ class estiPosition:
 ##if(res != None):
 ##    print(numpy.round(float(res[0]),decimals=3))
 ##    print(numpy.round(float(res[1]),decimals=3))
-
+##
 
 
 ## used for testing
