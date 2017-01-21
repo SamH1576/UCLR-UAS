@@ -1,6 +1,6 @@
+import os, shutil, time
 import transform
 import numpy as np
-import argparse
 import imutils
 import cv2
 import pytesseract
@@ -8,146 +8,200 @@ import Image
 import adjust_gamma
 from PIL import Image, ImageEnhance, ImageFilter
 from collections import Counter
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+from stepper import Motor
 
-# Colour detection bounds
-greenLower = (29, 86, 6)
-greenUpper = (64, 255, 255)
-redLower = (0,100,100)
-redUpper = (10,255,255)
+class detectTarget:
+        def __init__(self):
+                #declare list for detected characters
+                self.detectedCharacters = []
+                #declare frame counter
+                self.frameCount = 0
+                #declare bounds for detection colours
+                self.redLower1 = (0,100,100)
+                self.redUpper1 = (10,255,255)
+		self.redLower2 = (170,100,100)
+		self.redUpper2 = (180,255,255)
+                #declare video source for PC
+                #self.camera = cv2.VideoCapture(0)
 
-# For dev this is webcam, on RPi this will be different
-camera = cv2.VideoCapture(0)
+                #set up motor control
+                self.m = Motor([18,22,24,26])                
+                self.m.rpm = 5
+                #set initialposition
+                self.position = 0
 
-# Initialise screenCnt so we can check it later
-screenCnt = None
-
-# New list for detected characters
-pyCharacter = []
-
-# For live testing
-while True: 
-        (grabbed, frame) = camera.read()
-
-        # Keep copy of original and the ratio 
-        #ratio = frame.shape[1] / 600.0
-        orig = frame.copy()
-        #frame = imutils.resize(frame, width=600)
-
-        #cv2.imshow("Image", frame)
-
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        grayscale = cv2.split(hsv)
-        #blur image
-        hsv = cv2.GaussianBlur(hsv,(3,3), 0)
-        hsv = cv2.medianBlur(hsv, 5)
-        #Clear up image
-        mask = cv2.inRange(hsv, redLower, redUpper)
-
-        mask = cv2.erode(mask, None, iterations=2)
-        mask = cv2.dilate(mask, None, iterations=1)
-        cv2.imshow("Mask", mask)
+                #declare video source for RPi
+                self.camera = PiCamera()
+                self.camera.resolution = (640, 480)
+                self.camera.framerate = 10
+                self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
+                time.sleep(0.2)
         
-        # Grab contours
-        (cnts, _) = cv2.findContours(mask.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-        cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:5]
+        def changeColourspace(self, rbgImage):
+                #convert to hsv
+                hsv = cv2.cvtColor(rbgImage, cv2.COLOR_BGR2HSV)
+                #convert to grayscale - note grayscale[2] is used
+                grayscale = cv2.split(hsv)
+                #return copy of original
+                original = rbgImage
+                return hsv, grayscale, original
+        
+        def masking(self, frame):
+                #blur the image, gaussian for guassian noise
+                frame = cv2.GaussianBlur(frame,(3,3), 0)
+                #- median blur for salt and pepper noise
+                frame = cv2.medianBlur(frame, 5)
+                #drop pixels out of range
+                mask1 = cv2.inRange(frame, self.redLower1, self.redUpper1)
+		mask2 = cv2.inRange(frame, self.redLower2, self.redUpper2)
+		frame = mask1 + mask2 
+                #erode
+                frame = cv2.erode(frame, None, iterations=2)
+                #dilate
+                frame = cv2.dilate(frame, None, iterations=1)
+                return frame
+        
+        def findContour(self, frame):
+                screenCnt = None
+                #find contours, and order by size, largest first
+                (cnts, _) = cv2.findContours(frame, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+                cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:5]
+                #go over contours and find four sided contour
+                for c in cnts:
+                        # approximate the contour
+                        peri = cv2.arcLength(c, True)
+                        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+                        # if our approximated contour has four points, then we
+                        # can assume that we have found our box
+                        if len(approx) == 4:
+                                screenCnt = approx
+                                break
+                #return the contour geometry is screenCnt set
+                if(screenCnt is not None):
+                        return screenCnt
+                else:
+                        return None
 
-
-        # loop over the contours
-        for c in cnts:
-                # approximate the contour
-                peri = cv2.arcLength(c, True)
-                approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-                # if our approximated contour has four points, then we
-                # can assume that we have found our box
-                if len(approx) == 4:
-                        screenCnt = approx
-                        break
-
-        if(screenCnt is not None):      
-                # Calculate Moments and determine centroid
-                M = cv2.moments(screenCnt)
+        def processContour(self, contour, orig):
+                #calculate moments
+                M = cv2.moments(contour)
+                #determine centroid and area
                 centre = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
                 area = M["m00"]
-                #print(area)
-                if(area>200):   
-                        if(centre[0]>(orig.shape[1]/2)): #THIS MAY NOT BE RIGHT centre[0] -> centre
-                                print("Move right")
-                        else:
-                                print("Move left")
-                        cv2.drawContours(frame, [screenCnt], -1, (0, 255, 0), 2)
-                        cv2.circle(frame, (centre[0], centre[1]), 7, (255, 255, 255), -1)
-                        cv2.imshow("Outline", frame)
-
-                        warped = transform.four_point_transform(grayscale[2], screenCnt.reshape(4, 2)) #* ratio)
-                        #warped = cv2.bitwise_not(warped)       
-                        #warped = adjust_gamma.adjust_gamma(warped, 0.7)
-                        warped = cv2.GaussianBlur(warped,(5,5),0)
-                        #warped = ImageEnhance.Contrast(warped)
-                        #warped = enhancer.enhance(2)
-                        warped = cv2.adaptiveThreshold(warped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
-                        #cv2.imwrite('toDetect.jpg', warped)
-                        img = Image.fromarray(warped)
-                        enhancer = ImageEnhance.Contrast(img)
-                        img = enhancer.enhance(2)
-                        cv2.imshow("warped", warped)
-                        #text = pytesseract.image_to_string(Image.open('toDetect.jpg'),config='-psm 10')
-                        #send img to OCR, -psm 10 tells the OCR to look for a single character
-                        text = pytesseract.image_to_string(img,config='-psm 10')
-                        
-                        #add the detected character to the list
-                        pyCharacter.append(text)
-                        #print(text)
+                if(area>200):
+                        self.moveCamera(centre[0], orig.shape[1]/2)
+                        return True
                 else:
-                        print("Area too small")
-                        pass
-        else:
-                print("No box found")
-                exit
+                        return False
 
-        cv2.imshow("Outline", frame)
+        def moveCamera(self, target_X, frame_Width):
+                d_X = float(frame_Width - target_X)
+                #print(d_X)
+                set_Fraction = d_X/frame_Width
+                #print(set_Fraction)
+                #if greater than 1% left or right of centre
+                if(abs(set_Fraction)>0.01):    
+                        max_Setpoint = 40
+                        d_Position = set_Fraction*max_Setpoint
+                        #print(d_Position)
+                        self.position += (set_Fraction*max_Setpoint)
+                        self.m.move_to(self.position)
+                        print("Setpoint = %d degrees" % self.position)
+                else:
+                        print("Centred")
+
+        def adjustAndRecordFrame(self, frame, contours):
+                warped = transform.four_point_transform(frame, contours.reshape(4, 2)) #* ratio)
+                #warped = cv2.bitwise_not(warped)       
+                #warped = adjust_gamma.adjust_gamma(warped, 0.7)
+                warped = cv2.blur(warped,(5,5))
+                warped = cv2.GaussianBlur(warped,(5,5),0)
+                #warped = ImageEnhance.Contrast(warped)
+                #warped = enhancer.enhance(2)
+                warped = cv2.adaptiveThreshold(warped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,9,1)
+                #cv2.imwrite('toDetect.jpg', warped)
+                img = Image.fromarray(warped)
+                enhancer = ImageEnhance.Contrast(img)
+                img = enhancer.enhance(2)
+
+                #save the frame to be run through OCR later
+                savestring = 'DevelopmentCode/IRS/images/toDetect'+str(self.frameCount)+'.jpg'
+                img.save(savestring)
+                print 'image saved as ' + savestring
+
+                
+        def runOCR(self):
+                print 'running OCR'
+                for x in xrange(0, self.frameCount, 5):
+                        try:
+                                text= pytesseract.image_to_string(Image.open('DevelopmentCode/IRS/images/toDetect'+str(x)+'.jpg'),config='-psm 10')
+                        except IOError:
+                                print 'file doesn\'t exist' + 'images/toDetect'+str(x)+'.jpg' 
+                                #try the name file, ie next x
+                                continue
+                        
+                        #store detected character
+                        self.detectedCharacters.append(text)
         
-        #reset screenCnt
-        screenCnt = None
+                character =  Counter(self.detectedCharacters).most_common(1)
+                if(character[0][0] != ''):
+                        print(character[0][0])
+                elif(len(character)>1):
+                        print(character[1][0])
 
-        # if the 'q' key is pressed, stop the loop
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-                break
 
-character = Counter(pyCharacter).most_common(1)
-print(character[0][0])
 
-#       cv2.waitKey(0)
-#       cv2.destroyAllWindows()
+        def cleanImagesFolder(self):
+                folder = 'DevelopmentCode/IRS/images'
+                for the_file in os.listdir(folder):
+                        file_path= os.path.join(folder, the_file)
+                try:
+                        if os.path.isfile(file_path):
+                                        os.unlink(file_path)
+                        #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+                        self.frameCount = 0
+                except Exception as e:
+                        print(e)
 
-camera.release()
-cv2.destroyAllWindows()
+ 
+def main():
+        d = detectTarget()
+        #PC Version
+        #while True:
+                #(grabbed, frame) = d.camera.read()
+        #RPi Version
+        for frame in d.camera.capture_continuous(d.rawCapture, format="bgr", use_video_port=True):
+                frame = frame.array
+                cv2.imshow("Frame", frame)
+                hsv, grayscale, original = d.changeColourspace(frame)
+                frame = d.masking(hsv)
+                cv2.imshow("Outline", frame)
+                targetContour = d.findContour(frame)
+                if(targetContour is not None):
+                        if(d.processContour(targetContour, original)):
+                                if(d.frameCount % 5 == 0):
+                                        d.adjustAndRecordFrame(grayscale[2], targetContour)
+                                d.frameCount += 1
+                else:
+                        pass
 
-###############################
-# Dev Section
-###############################
-
-#code outline
-#############
-
-#class targetDetection: 
-#set parameters (like detection bounds, frame size, connection), declare detection array and screenCnt
-
-#grab frame
-#do geometric steps (reduce size, keep original etc)
-#change colourspace
-#blur
-#mask
-#erode
-#dilate
-#find contours
-#sort contours by size
-#attempt to fit largest contour to straight lines
-#if it has four edges then it is probably target
-#determine area bounded by contour and its centroid
-#if large enough, check location
-#warp contour area to a square
-#blur again
-#threshold (increase contrast)
-#send the area to py tesseract for OCR
-#store the result
+                key = cv2.waitKey(1) & 0xFF
+                if key == ord("q"):
+                        break
+                #for RPI only
+                d.rawCapture.truncate(0)
+        
+        cv2.destroyAllWindows()
+        d.m.move_to(0)
+        d.runOCR()
+        time.sleep(3)
+        d = None
+        
+        
+        
+#if module is being run stand alone, run the following
+if __name__ == "__main__":
+        print 'running stand alone'
+        main()
