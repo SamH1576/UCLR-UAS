@@ -91,20 +91,24 @@ class detectTarget:
                 centre = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
                 area = M["m00"]
                 if(area>200):
-                        if(centre[0]>((orig.shape[1]/2)*1.05)): 
-                                self.position += -1
-                                self.m.move_to(self.position)
-                                print("Move right")
-                        elif(centre[0]<((orig.shape[1]/2)*0.95)):
-                                self.position += 1
-                                self.m.move_to(self.position)
-                                print("Move left")
-                        else:
-                                print("Centred")
+                        moveCamera(centre[0], orig.shape[1]/2)
                         return True
                 else:
                         return False
-                                
+
+        def moveCamera(self, target_X, frame_Width):
+                frame_Centre = frame_Width/2
+                d_X = frame_Centre - target_X
+                set_Fraction = d_X/frame_Centre
+                #if greater than 5% left or right of centre
+                if(abs(set_Fraction)>0.05):    
+                        max_Setpoint = 40
+                        self.position += (set_Fraction*max_Setpoint)
+                        self.m.move_to(self.position)
+                        print("Setpoint = %d degrees" % self.position)
+                else:
+                        print("Centred")
+
         def adjustAndRecordFrame(self, frame, contours):
                 warped = transform.four_point_transform(frame, contours.reshape(4, 2)) #* ratio)
                 #warped = cv2.bitwise_not(warped)       
