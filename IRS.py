@@ -31,11 +31,12 @@ class detectTarget:
                 self.position = 0
 
                 #declare video source for RPi
+		self.resolution = {'width': 1088, 'height': 720}
                 self.camera = PiCamera()
-                self.camera.resolution = (640, 480)
+                self.camera.resolution = (self.resolution['width'], self.resolution['height'])
                 self.camera.framerate = 15
-                self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
-                time.sleep(0.2)
+                self.rawCapture = PiRGBArray(self.camera, size=(self.resolution['width'], self.resolution['height']))
+                time.sleep(0.3)
         
         def changeColourspace(self, rbgImage):
                 #convert to hsv
@@ -243,28 +244,30 @@ def main():
         #while True:
                 #(grabbed, frame) = d.camera.read()
         #RPi Version
-        for frame in d.camera.capture_continuous(d.rawCapture, format="bgr", use_video_port=True):
-                frame = frame.array
-                #cv2.imshow("Frame", frame)
-                hsv, grayscale, original = d.changeColourspace(frame)
-                frame = d.masking(hsv)
-                cv2.imshow("Outline", frame)
-                targetContour = d.findContour(frame)
-                if(targetContour is not None):
-                        if(d.processContour(targetContour, original)):
-                                if(d.frameCount % 5 == 0):
-                                        d.adjustAndRecordFrame(grayscale[2], targetContour)
-                                d.frameCount += 1
-                else:
-                        pass
-
-                key = cv2.waitKey(1) & 0xFF
-                if key == ord("q"):
-                        break
-                #for RPI only
-                d.rawCapture.truncate(0)
-        
-        cv2.destroyAllWindows()
+	try:
+	        for frame in d.camera.capture_continuous(d.rawCapture, format="bgr", use_video_port=True):
+        	        frame = frame.array
+                	#cv2.imshow("Frame", frame)
+	                hsv, grayscale, original = d.changeColourspace(frame)
+	                frame = d.masking(hsv)
+	                #cv2.imshow("Outline", frame)
+       	        	targetContour = d.findContour(frame)
+                	if(targetContour is not None):
+                	        if(d.processContour(targetContour, original)):
+                	                if(d.frameCount % 5 == 0):
+                	                        d.adjustAndRecordFrame(grayscale[2], targetContour)
+                	                d.frameCount += 1
+                	else:
+                	        pass
+	
+	                key = cv2.waitKey(1) & 0xFF
+       	        	if key == ord("q"):
+                	        break
+                	#for RPI only
+                	d.rawCapture.truncate(0)
+        except KeyboardInterrupt:
+		pass
+        #cv2.destroyAllWindows()
         d.m.move_to(0)
         d.runOCR()
         d.cleanImagesFolder()
