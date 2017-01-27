@@ -19,8 +19,8 @@ class detectTarget:
                 #declare bounds for detection colours
                 self.redLower1 = (0,100,100)
                 self.redUpper1 = (10,255,255)
-		self.redLower2 = (170,100,100)
-		self.redUpper2 = (180,255,255)
+                self.redLower2 = (170,100,100)
+                self.redUpper2 = (180,255,255)
                 #declare video source for PC
                 #self.camera = cv2.VideoCapture(0)
 
@@ -31,7 +31,7 @@ class detectTarget:
                 self.position = 0
 
                 #declare video source for RPi
-		self.resolution = {'width': 1088, 'height': 720}
+                self.resolution = {'width': 1088, 'height': 720}
                 self.camera = PiCamera()
                 self.camera.resolution = (self.resolution['width'], self.resolution['height'])
                 self.camera.framerate = 15
@@ -54,8 +54,8 @@ class detectTarget:
                 frame = cv2.medianBlur(frame, 5)
                 #drop pixels out of range
                 mask1 = cv2.inRange(frame, self.redLower1, self.redUpper1)
-		mask2 = cv2.inRange(frame, self.redLower2, self.redUpper2)
-		frame = mask1 + mask2 
+                mask2 = cv2.inRange(frame, self.redLower2, self.redUpper2)
+                frame = mask1 + mask2 
                 #erode
                 frame = cv2.erode(frame, None, iterations=2)
                 #dilate
@@ -244,7 +244,7 @@ def main():
         #while True:
                 #(grabbed, frame) = d.camera.read()
         #RPi Version
-	try:
+        try:
 	        for frame in d.camera.capture_continuous(d.rawCapture, format="bgr", use_video_port=True):
         	        frame = frame.array
                 	#cv2.imshow("Frame", frame)
