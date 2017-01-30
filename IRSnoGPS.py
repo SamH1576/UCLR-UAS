@@ -254,7 +254,7 @@ class missionRecon:
     def detection(self):
         d = detectTarget()
         posData = {}
-        for i in range(4):
+        for i in range(1):
             d = detectTarget()
             posData['target' + str(i)] = {}
             try:
@@ -271,13 +271,13 @@ class missionRecon:
                                         #if target it both appropriately size and centred
                                         if(targetSizenCentred[1])        
                                             #get location
-                                            currPos = self.MAVcomms.getGPSdata()
+                                            currPos = self.MAVcomms.getLocalPos()
                                             currAtt = self.MAVcomms.getAttitude()
                                             #if(abs(self.MAVcomms.MAVData['ROLL'])<0.175 and abs(self.MAVcomms.MAVData['PITCH'])<0.175)
 
                                             #record data
-                                            posData['target' + str(i)]['LAT'][self.dataCount] = self.MAVcomms.MAVData['LAT']
-                                            posData['target' + str(i)]['LONG'][self.dataCount] = self.MAVcomms.MAVData['LONG']
+                                            posData['target' + str(i)]['NORTH'][self.dataCount] = self.MAVcomms.MAVData['NORTH']
+                                            posData['target' + str(i)]['EAST'][self.dataCount] = self.MAVcomms.MAVData['EAST']
                                             posData['target' + str(i)]['HEADING'][self.dataCount] =  self.MAVcomms.MAVData['YAW'] + self.position
                                             self.dataCount += 1
                                             
@@ -303,38 +303,43 @@ class missionRecon:
             d = None
 
             self.dataCount = 0
-            calculation(posData['target' + str(i)])
+            x_estimate, y_estimate = calculation(posData['target' + str(i)])
+
+            print x_estimate, y_estimate, posData['target' + str(i)]['detectedChar']
 
 
     def calculation(self, targetData, targetNo):
-        strTarget = 'target' + str(targetNo)
-        originLAT = targetData[strTarget]['LAT'][0]
-        originLONG = targetData[strTarget]['LONG'][0]    
+        strTarget = 'target' + str(targetNo)   
         xyMatrix = []   
-        for i in range(len(targetData[strTarget]['LAT'])):
-            currLAT = targetData[strTarget]['LAT'][i]
-            currLONG = targetData[strTarget]['LONG'][i]
+        for i in range(len(targetData[strTarget]['NORTH'])):
+            currY = targetData[strTarget]['NORTH'][i]
+            currX = targetData[strTarget]['EAST'][i]
             currHEADING = targetData[strTarget]['HEADING'][i]
-            for j in range(len(targetData[strTarget]['LAT'])):
+            for j in range(len(targetData[strTarget]['NORTH'])):
                 if(i == j or i == 0):
                     #REMEMBER TO STRIP ZEROS
                     xyMatrix.append([])
                     xyMatrix[j].append(0)
                     xyMatrix[j].append(0)
                 else:
-                    compLAT = targetData[strTarget]['LAT'][j]
-                    compLONG = targetData[strTarget]['LONG'][j]
+                    compY = targetData[strTarget]['NORTH'][j]
+                    compX = targetData[strTarget]['EAST'][j]
                     compHEADING = targetData[strTarget]['HEADING'][j]
-                    XY1 = GPSXY(originLAT, originLONG, currLAT, currLONG)
-                    XY2 = GPSXY(currLAT, currLONG, compLAT, compLONG)
-                    targetXY = BearingMeet(XY1[0], XY1[1], XY2[0], XY2[1], currHEADING, compHEADING)
-                    #NEEDS CHANGING -> go the other way and convert from XY to GPS
-                    GPSestimate = GPSXY(currLAT, currLONG, targetXY[0], targetXY[1])
+                    targetXY = BearingMeet(currX, currY, compX, compY, currHEADING, compHEADING)
                     xyMatrix.append([])
-                    xyMatrix[j].append(GPSestimate[0])
-                    xyMatrix[j].append(GPSestimate[1])
+                    xyMatrix[j].append(targetXY[0])
+                    xyMatrix[j].append(targetXY[1])
 
+        X_total = 0
+        Y_total = 0
+        for i in range(len(xyMatrix)):
+            X_total += xyMatrix[i][0]
+            Y_total += xyMatrix[i][1]
 
+        x_estimate = X_total / (len(xyMatrix))
+        y_estimate = Y_total / (len(xyMatrix))
+
+        return x_estimate, y_estimate
 
 
 

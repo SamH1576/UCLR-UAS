@@ -34,6 +34,11 @@ class MAVconnect:
         self.MAVData['ALT'] = self.vehicle.location.global_relative_frame.alt
         self.MAVData['GSPD'] = self.vehicle.groundspeed
 
+    def getLocalPos(self):
+        self.MAVData['NORTH'] = self.vehicle.location.local_frame.north
+        self.MAVData['EAST'] = self.vehicle.location.local_frame.east
+        self.MAVData['DOWN'] = self.vehicle.location.local_frame.down
+
     def getAttitude(self):
         self.MAVData['ROLL'] = self.vehicle.attitude.roll
         self.MAVData['PITCH'] = self.vehicle.attitude.pitch

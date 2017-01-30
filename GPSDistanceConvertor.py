@@ -40,6 +40,50 @@ def GPSXY(lat1, long1, lat2, long2):
 
     return(X,Y,TOTAL)
 
+def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
+    if(bearing1 == bearing2):
+        print("Bearings are identical")
+        return None
+    if((numpy.fabs(bearing1-bearing2))==180):
+        print('bearings are parallel')
+        return None
+    
+    theta1 = numpy.radians(bearing1)
+    theta2 = numpy.radians(bearing2)
+    
+    if(bearing1>=90 and bearing1<=270):
+        #bearing pointing south, Yout cannot be above 0
+        South = True
+    else:
+        South = False
+
+    if(bearing1>0 and bearing1<180):
+        #pointing East, so Xout cannot be less than 0
+        East = True
+    else:
+        East = False
+    #a special case is when bearing1 or bearing2 equals 0, in which case Xout will equal x1 or x2 depending on which bearing is 0
+    if(bearing1 != 0 and bearing2 != 0):      
+        Xout = ((x2*(1/numpy.tan(theta2))) - (x1*(1/numpy.tan(theta1))) + y1 - y2)/((1/numpy.tan(theta2)) - (1/numpy.tan(theta1)))
+        Yout = (y2*numpy.tan(theta2) - y1*numpy.tan(theta1) + x1 - x2)/(numpy.tan(theta2) - numpy.tan(theta1))
+    else:
+        if(bearing1 == 0):
+            Xout = x1
+            Yout = (y2*numpy.tan(theta2) - y1*numpy.tan(theta1) + x1 - x2)/(numpy.tan(theta2) - numpy.tan(theta1))
+        if(bearing2 == 0):
+            Xout = x2
+            Yout = (y2*numpy.tan(theta2) - y1*numpy.tan(theta1) + x1 - x2)/(numpy.tan(theta2) - numpy.tan(theta1))
+
+    if(Xout>0 and East == False):
+        print("These bearings do not converge")
+        return None
+    if(Yout>0 and South == True):
+        print("These bearings do not converge")
+        return None
+    
+    return(Xout, Yout)
+
+
 ##For validation - matches MATLAB script
 ##X,Y,TOTAL = GPSXY(45.4649135,-95.9090323,45.46555306,-95.9097683)
 ##print(X)

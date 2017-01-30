@@ -2,9 +2,9 @@ import numpy
 #from collections import deque
 
 class estiPosition:
-    def __init__(self, VecConn):
+    def __init__(self):
         #declare array here so it can be accessed external as part of the class.
-        self.arrPos = []
+        #self.arrPos = []
         #add second dimension ie y
         #NOTE to add to this array:
         #first -> arrPos.append([]) adds another row
@@ -12,7 +12,7 @@ class estiPosition:
         #e.arrPos[i].append("bar") adds item "bar" in arrPos[i][1]
 
         #connection which is passed to the class
-        self.MAVcomms = VecConn
+        #self.MAVcomms = VecConn
 
     def main(self):
         print 'Start Position Estimation'
