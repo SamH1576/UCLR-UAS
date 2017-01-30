@@ -1,5 +1,5 @@
 import time
-from dronekit import connect, VehicleMode
+from dronekit import connect
 import threading
 
 class MAVconnect:
@@ -20,13 +20,13 @@ class MAVconnect:
 
     def connectVehicle(self):
         self.Connecting = True
-        try:
-            self.vehicle = connect(self.ConnectionString, heartbeat_timeout=20, wait_ready=True)
-            self.Connecting = False
-        except:
-            print('Connection timed out')
-            self.Connecting = False
-            self.ConnErrFlag = True
+        #try:
+        self.vehicle = connect(self.ConnectionString, source_system=254, wait_ready=True)
+        self.Connecting = False
+        #except:
+        #    print('Connection timed out')
+        #    self.Connecting = False
+        #    self.ConnErrFlag = True
                
     def getGPSdata(self):
         self.MAVData['LAT'] = self.vehicle.location.global_relative_frame.lat
@@ -48,3 +48,8 @@ class MAVconnect:
         print 'called'
         self.vehicle.close()
         print 'MAV disconnected'
+
+if __name__ == '__main__':
+	m = MAVconnect('udp:0.0.0.0:10')
+	m.getLocalPos()
+	print(m.MAVData['NORTH'])

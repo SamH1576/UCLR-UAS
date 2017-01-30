@@ -95,7 +95,7 @@ class detectTarget:
                         centred = self.moveCamera(centre[0], orig.shape[1]/2)
                         return True, centred
                 else:
-                        return False, centred
+                        return False, False
 
         def moveCamera(self, target_X, frame_Width):
                 d_X = float(frame_Width - target_X)
@@ -242,7 +242,7 @@ class detectTarget:
                 return warped
 
 class missionRecon:
-    def __init__(self, maxTurnAngle=120, VecConn):
+    def __init__(self, VecConn, maxTurnAngle=120):
         if(0 <= maxTurnAngle <= 360):
             self.maxTurnAngle = maxTurnAngle
         else:
@@ -269,7 +269,7 @@ class missionRecon:
                                 targetSizenCentred = d.processContour(targetContour, original)
                                 if(targetSizenCentred[0]):
                                         #if target it both appropriately size and centred
-                                        if(targetSizenCentred[1])        
+                                        if(targetSizenCentred[1]):        
                                             #get location
                                             currPos = self.MAVcomms.getGPSdata()
                                             currAtt = self.MAVcomms.getAttitude()
