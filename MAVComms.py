@@ -5,6 +5,7 @@ import threading
 class MAVconnect:
     def __init__(self, strCon):
         self.ConnectionString = strCon
+	self.vehicle = None
 	#dictionary of MAV data, can be extended if more info is needed
         self.MAVData = {'LAT': None, 'LONG': None, 'ALT': None, 'GSPD': None, 'ROLL': None, 'PITCH': None, 'YAW': None}
         self.ConnErrFlag = False
@@ -61,9 +62,15 @@ if __name__ == '__main__':
 #	m.armVehicle()
 #	time.sleep(2)
 	
-	for x in range(50):
-		m.getAttitude()
-		m.getGPSdata()
-		print(m.MAVData['ROLL'])
-		print(m.MAVData['LAT'])
-		time.sleep(0.5)
+	import IRS
+
+        print('Starting MAV connection')
+        if(m.vehicle is not None):
+                print('Initialising mission object')
+                mission = IRS.missionRecon(m)
+        	print('Starting detection')
+	        mission.detection()
+        else:
+                print('No connection, exiting')
+
+
