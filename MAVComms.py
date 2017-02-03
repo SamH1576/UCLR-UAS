@@ -55,10 +55,15 @@ class MAVconnect:
         print 'MAV disconnected'
 
 if __name__ == '__main__':
-	m = MAVconnect('/dev/ttyACM1')
-	m.armVehicle()
-	time.sleep(2)
-	m.getAttitude()
-	m.getLocalPos()
-	print(m.MAVData['ROLL'])
-	print(m.MAVData['NORTH'])
+#	m = MAVconnect('/dev/ttyAMA0')
+	m = MAVconnect('/dev/ttyACM0')
+#	m = MAVconnect('/dev/serial0,57600')
+#	m.armVehicle()
+#	time.sleep(2)
+	
+	for x in range(50):
+		m.getAttitude()
+		m.getGPSdata()
+		print(m.MAVData['ROLL'])
+		print(m.MAVData['LAT'])
+		time.sleep(0.5)
