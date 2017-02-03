@@ -10,7 +10,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from stepper import Motor
 from GPSDistanceConvertor import GPSXY, BearingMeet
-
+from MAVComms import MAVconnect
 
 class detectTarget:
         def __init__(self):
@@ -303,7 +303,6 @@ class missionRecon:
             d = None
 
             self.dataCount = 0
-            calculation(posData['target' + str(i)])
             x_estimate, y_estimate = calculation(posData['target' + str(i)])
 
             print x_estimate, y_estimate, posData['target' + str(i)]['detectedChar']
@@ -352,8 +351,14 @@ class missionRecon:
 
 
 
-
 def main():
+	newconnection = MAVconnect('dev/ttyACM0')
+	mission = missionRecon(newconnection)
+	mission.detection()	
+
+
+
+def main1():
         d = detectTarget()
         #PC Version
         #while True:
