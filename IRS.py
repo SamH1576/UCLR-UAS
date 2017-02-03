@@ -255,7 +255,6 @@ class missionRecon:
         d = detectTarget()
         posData = {}
         for i in range(4):
-            d = detectTarget()
             posData['target' + str(i)] = {}
             try:
                 for frame in d.camera.capture_continuous(d.rawCapture, format="bgr", use_video_port=True):
@@ -289,7 +288,7 @@ class missionRecon:
                                 pass
                         
                         d.rawCapture.truncate(0)
-                        if(abs(self.position) > abs(self.maxTurnAngle)):
+                        if(abs(d.position) > abs(self.maxTurnAngle)):
                             print('Max turning angle reached')
                             break
 
@@ -353,17 +352,15 @@ class missionRecon:
 
 def main():
 	print('Starting MAV connection')
-	m = MAVComms.MAVconnect('dev/ttyACM0')
-	if(m.vehicle is not None):
-		print('Initialising mission object')	
-		mission = missionRecon(m)
-	else:
-		print('No connection, exiting')
-		return
-	print('Starting detection')
-	mission.detection()	
-
-
+	m = MAVComms.MAVconnect('/dev/serial0,57600')
+        if(m.vehicle is not None):
+                print('Initialising mission object')
+                mission = missionRecon(m)
+                print('Starting detection')
+                mission.detection()
+        else:
+                print('No connection, exiting')
+		
 
 def main1():
         d = detectTarget()

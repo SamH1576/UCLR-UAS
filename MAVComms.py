@@ -61,16 +61,3 @@ if __name__ == '__main__':
 #	m = MAVconnect('/dev/serial0,57600')
 #	m.armVehicle()
 #	time.sleep(2)
-	
-	import IRS
-
-        print('Starting MAV connection')
-        if(m.vehicle is not None):
-                print('Initialising mission object')
-                mission = IRS.missionRecon(m)
-        	print('Starting detection')
-	        mission.detection()
-        else:
-                print('No connection, exiting')
-
-
