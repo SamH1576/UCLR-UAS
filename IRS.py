@@ -304,6 +304,9 @@ class missionRecon:
 
             self.dataCount = 0
             calculation(posData['target' + str(i)])
+            x_estimate, y_estimate = calculation(posData['target' + str(i)])
+
+            print x_estimate, y_estimate, posData['target' + str(i)]['detectedChar']
 
 
     def calculation(self, targetData, targetNo):
