@@ -242,7 +242,7 @@ class detectTarget:
                 return warped
 
 class missionRecon:
-    def __init__(self, VecConn, maxTurnAngle=120):
+    def __init__(self, VecConn, maxTurnAngle=60):
         if(0 <= maxTurnAngle <= 360):
             self.maxTurnAngle = maxTurnAngle
         else:
@@ -256,6 +256,9 @@ class missionRecon:
         posData = {}
         for i in range(4):
             posData['target' + str(i)] = {}
+            posData['target' + str(i)]['LAT'] = {}
+            posData['target' + str(i)]['LONG'] = {}
+            posData['target' + str(i)]['HEADING'] = {}
             try:
                 for frame in d.camera.capture_continuous(d.rawCapture, format="bgr", use_video_port=True):
                         frame = frame.array
@@ -277,7 +280,7 @@ class missionRecon:
                                             #record data
                                             posData['target' + str(i)]['LAT'][self.dataCount] = self.MAVcomms.MAVData['LAT']
                                             posData['target' + str(i)]['LONG'][self.dataCount] = self.MAVcomms.MAVData['LONG']
-                                            posData['target' + str(i)]['HEADING'][self.dataCount] =  self.MAVcomms.MAVData['YAW'] + self.position
+                                            posData['target' + str(i)]['HEADING'][self.dataCount] =  self.MAVcomms.MAVData['YAW'] + d.position
                                             self.dataCount += 1
                                             
                                         if(d.frameCount % 5 == 0):
@@ -302,7 +305,9 @@ class missionRecon:
             d = None
 
             self.dataCount = 0
-            x_estimate, y_estimate = calculation(posData['target' + str(i)])
+	    print('target' + str(i))
+	    missionRecon.recordDatatoFile(self, posData)
+            x_estimate, y_estimate = missionRecon.calculation(self, posData, str(i))
 
             print x_estimate, y_estimate, posData['target' + str(i)]['detectedChar']
 
@@ -352,7 +357,7 @@ class missionRecon:
 
 def main():
 	print('Starting MAV connection')
-	m = MAVComms.MAVconnect('/dev/serial0,57600')
+	m = MAVComms.MAVconnect('/dev/ttyACM0')
         if(m.vehicle is not None):
                 print('Initialising mission object')
                 mission = missionRecon(m)

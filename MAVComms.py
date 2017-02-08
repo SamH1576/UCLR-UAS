@@ -51,7 +51,7 @@ class MAVconnect:
         print('Armed: %s' % self.vehicle.armed)
 
     def disconnectMAV(self):
-        print 'called'
+#        print 'called'
         self.vehicle.close()
         print 'MAV disconnected'
 
@@ -61,3 +61,6 @@ if __name__ == '__main__':
 #	m = MAVconnect('/dev/serial0,57600')
 #	m.armVehicle()
 #	time.sleep(2)
+	m.getGPSdata()
+	print(m.MAVData['LAT'])
+	m.disconnectMAV()
