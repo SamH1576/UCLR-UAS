@@ -41,7 +41,7 @@ def GPSXY(lat1, long1, lat2, long2):
     return(X,Y,TOTAL)
 
 def addXY2GPS(lat_in, long_in, X, Y):
-    R=6378137
+    R= 6378137.0
     dLat = Y/R
     dLon = X/(R*math.cos(math.pi*lat_in/180))
     lat_o = lat_in + dLat * 180/math.pi
