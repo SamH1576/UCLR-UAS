@@ -307,9 +307,9 @@ class missionRecon:
             self.dataCount = 0
 	    print('target' + str(i))
 	    missionRecon.recordDatatoFile(self, posData)
-            x_estimate, y_estimate = missionRecon.calculation(self, posData, str(i))
+        avg_lat, avg_long = missionRecon.calculation(self, posData, str(i))
 
-            print x_estimate, y_estimate, posData['target' + str(i)]['detectedChar']
+        print avg_lat, avg_lat, posData['target' + str(i)]['detectedChar']
 
 
     def calculation(self, targetData, targetNo):
@@ -334,25 +334,31 @@ class missionRecon:
                     XY1 = GPSXY(originLAT, originLONG, currLAT, currLONG)
                     XY2 = GPSXY(currLAT, currLONG, compLAT, compLONG)
                     targetXY = BearingMeet(XY1[0], XY1[1], XY2[0], XY2[1], currHEADING, compHEADING)
-                    #NEEDS CHANGING -> go the other way and convert from XY to GPS
-                    GPSestimate = GPSXY(currLAT, currLONG, targetXY[0], targetXY[1])
+                    GPSestimate = addXY2GPS(currLAT, currLONG, targetXY[0], targetXY[1])
                     xyMatrix.append([])
                     xyMatrix[j].append(GPSestimate[0])
                     xyMatrix[j].append(GPSestimate[1])
 
+        #average GPS values, first stripping zeros
+        total_lat = 0
+        total_long = 0
+        for i in range(len(xyMatrix)):
+            if(xyMatrix[i][0] == 0):
+                pass
+            else:
+                total_lat += xyMatrix[i][0]
+                total_long += xyMatrix[i][1]
 
+        avg_lat = total_lat / (len(xyMatrix) - 1)
+        avg_long = total_long / (len(xyMatrix) - 1)
 
-
+        return avg_lat, avg_long
 
 
     def recordDatatoFile(self, data):
         with open('log.txt', 'w') as f:
             for key, value in data.items():
                 f.write('%s:%s\n' % (key, value))
-
-
-        
-
 
 
 def main():

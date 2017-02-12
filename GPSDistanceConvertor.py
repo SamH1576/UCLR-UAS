@@ -40,6 +40,14 @@ def GPSXY(lat1, long1, lat2, long2):
 
     return(X,Y,TOTAL)
 
+def addXY2GPS(lat_in, long_in, X, Y):
+    R=6378137
+    dLat = Y/R
+    dLon = X/(R*math.cos(math.pi*lat_in/180))
+    lat_o = lat_in + dLat * 180/math.pi
+    long_o = long_in + dLon * 180/math.pi
+    return(lat_o, long_o)
+
 def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
     if(bearing1 == bearing2):
         print("Bearings are identical")
