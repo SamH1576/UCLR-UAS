@@ -308,7 +308,7 @@ class missionRecon:
             break
 	    print('target' + str(i))
         d = None
-	    missionRecon.recordDatatoFile(self, posData)
+        missionRecon.recordDatatoFile(self, posData)
         avg_lat, avg_long = missionRecon.calculation(self, posData, str(i))
 
         print avg_lat, avg_lat, posData['target' + str(i)]['detectedChar']
@@ -345,6 +345,7 @@ class missionRecon:
         #average GPS values, first stripping zeros
         total_lat = 0
         total_long = 0
+        print(xyMatrix)
         for i in range(len(xyMatrix)):
             if(xyMatrix[i][0] == 0):
                 pass
