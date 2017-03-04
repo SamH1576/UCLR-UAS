@@ -337,10 +337,11 @@ class missionRecon:
                     XY1 = GPSXY(originLAT, originLONG, currLAT, currLONG)
                     XY2 = GPSXY(currLAT, currLONG, compLAT, compLONG)
                     targetXY = BearingMeet(XY1[0], XY1[1], XY2[0], XY2[1], currHEADING, compHEADING)
-                    GPSestimate = addXY2GPS(currLAT, currLONG, targetXY[0], targetXY[1])
-                    xyMatrix.append([])
-                    xyMatrix[j].append(GPSestimate[0])
-                    xyMatrix[j].append(GPSestimate[1])
+                    if(targetXY[0] is not None and targetXY[1] is not None)
+                        GPSestimate = addXY2GPS(currLAT, currLONG, targetXY[0], targetXY[1])
+                        xyMatrix.append([])
+                        xyMatrix[j].append(GPSestimate[0])
+                        xyMatrix[j].append(GPSestimate[1])
 
         #average GPS values, first stripping zeros
         total_lat = 0
