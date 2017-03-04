@@ -319,7 +319,8 @@ class missionRecon:
         strTarget = 'target' + str(targetNo)
         originLAT = targetData[strTarget]['LAT'][0]
         originLONG = targetData[strTarget]['LONG'][0]    
-        xyMatrix = []   
+        xyMatrix = []
+        data_counter = 0
         for i in range(len(targetData[strTarget]['LAT'])):
             currLAT = targetData[strTarget]['LAT'][i]
             currLONG = targetData[strTarget]['LONG'][i]
@@ -328,8 +329,8 @@ class missionRecon:
                 if(i == j or i == 0):
                     #REMEMBER TO STRIP ZEROS
                     xyMatrix.append([])
-                    xyMatrix[j].append(0)
-                    xyMatrix[j].append(0)
+                    xyMatrix[data_counter].append(0)
+                    xyMatrix[data_counter].append(0)
                 else:
                     compLAT = targetData[strTarget]['LAT'][j]
                     compLONG = targetData[strTarget]['LONG'][j]
@@ -340,16 +341,18 @@ class missionRecon:
                     if(targetXY[0] is not None and targetXY[1] is not None):
                         GPSestimate = addXY2GPS(currLAT, currLONG, targetXY[0], targetXY[1])
                         xyMatrix.append([])
-                        xyMatrix[j].append(GPSestimate[0])
-                        xyMatrix[j].append(GPSestimate[1])
-                    else
+                        xyMatrix[data_counter].append(GPSestimate[0])
+                        xyMatrix[data_counter].append(GPSestimate[1])
+                    else:
                         xyMatrix.append([])
-                        xyMatrix[j].append(0)
-                        xyMatrix[j].append(0)
+                        xyMatrix[data_counter].append(0)
+                        xyMatrix[data_counter].append(0)
+                data_counter += 1
 
         #average GPS values, first stripping zeros
         total_lat = 0
         total_long = 0
+        data_count = 0
         print(xyMatrix)
         for i in range(len(xyMatrix)):
             if(xyMatrix[i][0] == 0):
@@ -357,9 +360,10 @@ class missionRecon:
             else:
                 total_lat += xyMatrix[i][0]
                 total_long += xyMatrix[i][1]
+                data_count += 1
 
-        avg_lat = total_lat / (len(xyMatrix) - 1)
-        avg_long = total_long / (len(xyMatrix) - 1)
+        avg_lat = total_lat / (data_count)
+        avg_long = total_long / (data_count)
 
         return avg_lat, avg_long
 
