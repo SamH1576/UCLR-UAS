@@ -327,9 +327,9 @@ class missionRecon:
             for j in range(len(targetData[strTarget]['LAT'])):
                 if(i == j or i == 0):
                     #REMEMBER TO STRIP ZEROS
-                    xyMatrix.append([])
-                    xyMatrix[j].append(0)
-                    xyMatrix[j].append(0)
+                    #xyMatrix.append([])
+                    #xyMatrix[j].append(0)
+                    #xyMatrix[j].append(0)
                 else:
                     compLAT = targetData[strTarget]['LAT'][j]
                     compLONG = targetData[strTarget]['LONG'][j]
