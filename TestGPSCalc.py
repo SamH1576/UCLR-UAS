@@ -21,6 +21,7 @@ for x in range(len(your_list)):
 	    posData['target' + str(i)]['LONG'][x-1] = float(your_list[x][0])
 	    posData['target' + str(i)]['HEADING'][x-1] =  float(your_list[x][2])
 
-print(posData)
+#print(posData)
 m = missionRecon(None)
 avg_lat, avg_long = m.calculation( posData, str(i))
+print avg_lat, avg_long
