@@ -1,5 +1,6 @@
 import time
 import math
+import numpy
 
 def GPSXY(lat1, long1, lat2, long2):
     #worth noting lat1 long1 is location, lat2 long2 is target
