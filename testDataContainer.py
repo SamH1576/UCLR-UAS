@@ -22,6 +22,7 @@ testMatrix[0].append(1)
 testMatrix[0].append(2)
 print testMatrix[0][1]
 
+
 with open('log.txt', 'w') as f:
 	for key, value in data.items():
 		f.write('%s:%s\n' % (key, value))

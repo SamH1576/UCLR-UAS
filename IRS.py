@@ -302,10 +302,10 @@ class missionRecon:
             posData['target' + str(i)]['detectedChar'] = d.runOCR()
             d.cleanImagesFolder()
             time.sleep(2)
-            d = None
 
             self.dataCount = 0
 	    print('target' + str(i))
+        d = None
 	    missionRecon.recordDatatoFile(self, posData)
         avg_lat, avg_long = missionRecon.calculation(self, posData, str(i))
 
@@ -313,6 +313,7 @@ class missionRecon:
 
 
     def calculation(self, targetData, targetNo):
+        print('Starting calculation')
         strTarget = 'target' + str(targetNo)
         originLAT = targetData[strTarget]['LAT'][0]
         originLONG = targetData[strTarget]['LONG'][0]    
