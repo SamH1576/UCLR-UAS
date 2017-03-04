@@ -311,7 +311,7 @@ class missionRecon:
         missionRecon.recordDatatoFile(self, posData)
         avg_lat, avg_long = missionRecon.calculation(self, posData, str(i))
 
-        print avg_lat, avg_lat, posData['target' + str(i)]['detectedChar']
+        print avg_lat, avg_long, posData['target' + str(i)]['detectedChar']
 
 
     def calculation(self, targetData, targetNo):
@@ -353,7 +353,7 @@ class missionRecon:
         total_lat = 0
         total_long = 0
         data_count = 0
-        print(xyMatrix)
+
         for i in range(len(xyMatrix)):
             if(xyMatrix[i][0] == 0):
                 pass
@@ -361,6 +361,10 @@ class missionRecon:
                 total_lat += xyMatrix[i][0]
                 total_long += xyMatrix[i][1]
                 data_count += 1
+
+        if(data_count == 0):
+            print("No data recorded")
+            return None, None
 
         avg_lat = total_lat / (data_count)
         avg_long = total_long / (data_count)
