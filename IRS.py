@@ -9,7 +9,7 @@ from collections import Counter
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 from stepper import Motor
-from GPSDistanceConvertor import GPSXY, BearingMeet
+from GPSDistanceConvertor import GPSXY, BearingMeet, addXY2GPS
 import MAVComms
 
 class detectTarget:
