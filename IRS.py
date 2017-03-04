@@ -102,8 +102,8 @@ class detectTarget:
                 #print(d_X)
                 set_Fraction = d_X/frame_Width
                 #print(set_Fraction)
-                #if greater than 1% left or right of centre
-                if(abs(set_Fraction)>0.01):    
+                #if greater than 5% left or right of centre
+                if(abs(set_Fraction)>0.05):    
                         max_Setpoint = 40
                         d_Position = set_Fraction*max_Setpoint
                         #print(d_Position)
@@ -304,6 +304,8 @@ class missionRecon:
             time.sleep(2)
 
             self.dataCount = 0
+            #delete this break for production version (so it runs 4 times)
+            break
 	    print('target' + str(i))
         d = None
 	    missionRecon.recordDatatoFile(self, posData)
