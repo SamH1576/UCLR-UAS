@@ -1,4 +1,4 @@
-#from IRS import missionRecon
+from IRS import missionRecon
 import csv
 
 
@@ -17,9 +17,10 @@ for x in range(len(your_list)):
 	if(x == 0):
 		pass
 	else:
-	    posData['target' + str(i)]['LAT'][x] = your_list[x][1]
-	    posData['target' + str(i)]['LONG'][x] = your_list[x][0]
-	    posData['target' + str(i)]['HEADING'][x] =  your_list[x][2]
+	    posData['target' + str(i)]['LAT'][x-1] = float(your_list[x][1])
+	    posData['target' + str(i)]['LONG'][x-1] = float(your_list[x][0])
+	    posData['target' + str(i)]['HEADING'][x-1] =  float(your_list[x][2])
 
+print(posData)
 m = missionRecon(None)
-avg_lat, avg_long = m.calculation(self, posData, str(i))
+avg_lat, avg_long = m.calculation( posData, str(i))

@@ -85,10 +85,10 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
 
     if(Xout>0 and East == False):
         print("These bearings do not converge")
-        return None
+        return(None, None)
     if(Yout>0 and South == True):
         print("These bearings do not converge")
-        return None
+        return(None, None)
     
     return(Xout, Yout)
 
