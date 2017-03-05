@@ -337,7 +337,7 @@ class missionRecon:
                     compHEADING = targetData[strTarget]['HEADING'][j]
                     XY1 = GPSXY(originLAT, originLONG, currLAT, currLONG)
                     XY2 = GPSXY(currLAT, currLONG, compLAT, compLONG)
-		    print(XY1, XY2, currHEADING, compHEADING)
+		            print(XY1, XY2, currHEADING, compHEADING)
                     targetXY = BearingMeet(XY1[0], XY1[1], XY2[0], XY2[1], currHEADING, compHEADING)
                     if(targetXY[0] is not None and targetXY[1] is not None):
                         GPSestimate = addXY2GPS(currLAT, currLONG, targetXY[0], targetXY[1])
