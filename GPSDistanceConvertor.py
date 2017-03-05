@@ -57,7 +57,7 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
         print('bearings are parallel')
         return None,None
 
-    if(numpy.fabs(bearing1-bearing2) < 5 ):
+    if(numpy.fabs(bearing1-bearing2) < 1 ):
     	print("Bearings too close")
     	return None,None
     
@@ -79,7 +79,7 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
     if(bearing1 != 0 and bearing2 != 0):      
         Xout = ((x2*(1/numpy.tan(theta2))) - (x1*(1/numpy.tan(theta1))) + y1 - y2)/((1/numpy.tan(theta2)) - (1/numpy.tan(theta1)))
         Yout = (y2*numpy.tan(theta2) - y1*numpy.tan(theta1) + x1 - x2)/(numpy.tan(theta2) - numpy.tan(theta1))
-	print(Xout, Yout)
+	#print(Xout, Yout)
     else:
         if(bearing1 == 0):
             Xout = x1

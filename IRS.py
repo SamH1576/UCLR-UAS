@@ -327,7 +327,6 @@ class missionRecon:
             currHEADING = targetData[strTarget]['HEADING'][i]
             for j in range(len(targetData[strTarget]['LAT'])):
                 if(i == j):
-                    print i, j
                     xyMatrix.append([])
                     xyMatrix[data_counter].append(0)
                     xyMatrix[data_counter].append(0)
@@ -337,7 +336,7 @@ class missionRecon:
                     compHEADING = targetData[strTarget]['HEADING'][j]
                     XY1 = GPSXY(originLAT, originLONG, currLAT, currLONG)
                     XY2 = GPSXY(originLAT, originLONG, compLAT, compLONG)
-	            print(XY1, XY2, currHEADING, compHEADING)
+	            #print(XY1, XY2, currHEADING, compHEADING)
                     targetXY = BearingMeet(XY1[0], XY1[1], XY2[0], XY2[1], currHEADING, compHEADING)
                     if(targetXY[0] is not None and targetXY[1] is not None):
                         GPSestimate = addXY2GPS(originLAT, originLONG, targetXY[0], targetXY[1])
@@ -345,7 +344,7 @@ class missionRecon:
                         xyMatrix[data_counter].append(GPSestimate[0])
                         xyMatrix[data_counter].append(GPSestimate[1])
                     else:
-                        print targetXY
+                        #print targetXY
                         xyMatrix.append([])
                         xyMatrix[data_counter].append(0)
                         xyMatrix[data_counter].append(0)
@@ -355,7 +354,7 @@ class missionRecon:
         total_lat = 0
         total_long = 0
         data_count = 0
-	print xyMatrix
+	#print xyMatrix
         for i in range(len(xyMatrix)):
             if(xyMatrix[i][0] == 0):
                 pass
@@ -370,12 +369,6 @@ class missionRecon:
 
         avg_lat = total_lat / (data_count)
         avg_long = total_long / (data_count)
-
-	for i in range(len(xyMatrix)):
-	    if(xyMatrix[i][0] == 0):
-	        pass
-    	    else:
-                print(xyMatrix[i][0] - 51.522987, xyMatrix[i][1] - -0.240265)
 
         return avg_lat, avg_long
 
