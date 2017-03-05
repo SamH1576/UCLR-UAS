@@ -57,7 +57,7 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
         print('bearings are parallel')
         return None,None
 
-    if(numpy.fabs(bearing1-bearing2) < 5):
+    if(numpy.fabs(bearing1-bearing2) < 40 ):
     	print("Bearings too close")
     	return None,None
     

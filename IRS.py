@@ -371,6 +371,12 @@ class missionRecon:
         avg_lat = total_lat / (data_count)
         avg_long = total_long / (data_count)
 
+	for i in range(len(xyMatrix)):
+	    if(xyMatrix[i][0] == 0):
+	        pass
+    	    else:
+                print(xyMatrix[i][0] - 51.522987, xyMatrix[i][1] - -0.240265)
+
         return avg_lat, avg_long
 
 
@@ -417,6 +423,7 @@ def main1():
 	                key = cv2.waitKey(1) & 0xFF
        	        	if key == ord("q"):
                 	        break
+
                 	#for RPI only
                 	d.rawCapture.truncate(0)
         except KeyboardInterrupt:
