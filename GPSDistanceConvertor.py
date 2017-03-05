@@ -58,8 +58,8 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
         return None,None
 
     if(numpy.fabs(bearing1-bearing2) < 5):
-	print("Bearings too close")
-	return None,None
+    	print("Bearings too close")
+    	return None,None
     
     theta1 = numpy.radians(bearing1)
     theta2 = numpy.radians(bearing2)

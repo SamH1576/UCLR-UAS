@@ -328,6 +328,7 @@ class missionRecon:
             for j in range(len(targetData[strTarget]['LAT'])):
                 if(i == j or i == 0):
                     #REMEMBER TO STRIP ZEROS
+                    print i, j
                     xyMatrix.append([])
                     xyMatrix[data_counter].append(0)
                     xyMatrix[data_counter].append(0)
@@ -345,6 +346,7 @@ class missionRecon:
                         xyMatrix[data_counter].append(GPSestimate[0])
                         xyMatrix[data_counter].append(GPSestimate[1])
                     else:
+                        print targetXY
                         xyMatrix.append([])
                         xyMatrix[data_counter].append(0)
                         xyMatrix[data_counter].append(0)
