@@ -354,7 +354,7 @@ class missionRecon:
         total_lat = 0
         total_long = 0
         data_count = 0
-
+	print xyMatrix
         for i in range(len(xyMatrix)):
             if(xyMatrix[i][0] == 0):
                 pass

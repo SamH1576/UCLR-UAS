@@ -52,10 +52,14 @@ def addXY2GPS(lat_in, long_in, X, Y):
 def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
     if(bearing1 == bearing2):
         print("Bearings are identical")
-        return None
+        return None,None
     if((numpy.fabs(bearing1-bearing2))==180):
         print('bearings are parallel')
-        return None
+        return None,None
+
+    if(numpy.fabs(bearing1-bearing2) < 5):
+	print("Bearings too close")
+	return None,None
     
     theta1 = numpy.radians(bearing1)
     theta2 = numpy.radians(bearing2)
@@ -75,6 +79,7 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
     if(bearing1 != 0 and bearing2 != 0):      
         Xout = ((x2*(1/numpy.tan(theta2))) - (x1*(1/numpy.tan(theta1))) + y1 - y2)/((1/numpy.tan(theta2)) - (1/numpy.tan(theta1)))
         Yout = (y2*numpy.tan(theta2) - y1*numpy.tan(theta1) + x1 - x2)/(numpy.tan(theta2) - numpy.tan(theta1))
+	print(Xout, Yout)
     else:
         if(bearing1 == 0):
             Xout = x1
