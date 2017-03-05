@@ -326,8 +326,7 @@ class missionRecon:
             currLONG = targetData[strTarget]['LONG'][i]
             currHEADING = targetData[strTarget]['HEADING'][i]
             for j in range(len(targetData[strTarget]['LAT'])):
-                if(i == j or i == 0):
-                    #REMEMBER TO STRIP ZEROS
+                if(i == j):
                     print i, j
                     xyMatrix.append([])
                     xyMatrix[data_counter].append(0)
