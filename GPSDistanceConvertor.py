@@ -65,13 +65,13 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
     theta2 = numpy.radians(bearing2)
     
     if(bearing1>=90 and bearing1<=270):
-        #bearing pointing south, Yout cannot be above 0
+        #bearing pointing south, Yout cannot be above y1
         South = True
     else:
         South = False
 
     if(bearing1>0 and bearing1<180):
-        #pointing East, so Xout cannot be less than 0
+        #pointing East, so Xout cannot be less than x1
         East = True
     else:
         East = False
@@ -88,10 +88,10 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
             Xout = x2
             Yout = (y2*numpy.tan(theta2) - y1*numpy.tan(theta1) + x1 - x2)/(numpy.tan(theta2) - numpy.tan(theta1))
 
-    if(Xout>0 and East == False):
+    if(Xout>x1 and East == False):
         print("These bearings do not converge")
         return(None, None)
-    if(Yout>0 and South == True):
+    if(Yout>y1 and South == True):
         print("These bearings do not converge")
         return(None, None)
     
