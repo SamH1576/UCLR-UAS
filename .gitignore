@@ -222,3 +222,4 @@ pip-log.txt
 #Compiled python
 *.pyc
 *.pyc
+SampleGPSBearingDataProcessed.csv
