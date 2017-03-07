@@ -242,7 +242,7 @@ class detectTarget:
                 return warped
 
 class missionRecon:
-    def __init__(self, VecConn, maxTurnAngle=60):
+    def __init__(self, VecConn, maxTurnAngle=120):
         if(0 <= maxTurnAngle <= 360):
             self.maxTurnAngle = maxTurnAngle
         else:
@@ -336,8 +336,8 @@ class missionRecon:
                     compHEADING = targetData[strTarget]['HEADING'][j]
                     XY1 = GPSXY(originLAT, originLONG, currLAT, currLONG)
                     XY2 = GPSXY(originLAT, originLONG, compLAT, compLONG)
-	            #print(XY1, XY2, currHEADING, compHEADING)
                     targetXY = BearingMeet(XY1[0], XY1[1], XY2[0], XY2[1], currHEADING, compHEADING)
+	            print ', '.join(map(str,((XY1[0], XY1[1], XY2[0], XY2[1], currHEADING, compHEADING, targetXY[0], targetXY[1]))))
                     if(targetXY[0] is not None and targetXY[1] is not None):
                         GPSestimate = addXY2GPS(originLAT, originLONG, targetXY[0], targetXY[1])
                         xyMatrix.append([])
