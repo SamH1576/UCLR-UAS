@@ -258,7 +258,7 @@ class UCLRUASNAV:
         self.DistTotal1.configure(foreground="#000000")
         self.DistTotal1.configure(highlightbackground="#d9d9d9")
         self.DistTotal1.configure(highlightcolor="black")
-        self.DistTotal1.configure(text='''Dist to Target:''')
+        self.DistTotal1.configure(text='''Distance:''')
         self.DistTotal1.configure(width=60)
 
         self.EntryTotal1 = Entry(self.PayloadFrame)
