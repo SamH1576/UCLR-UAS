@@ -213,7 +213,7 @@ class UCLRUASNAV:
         self.TargetLAT.configure(highlightbackground="#d9d9d9")
         self.TargetLAT.configure(highlightcolor="black")
         self.TargetLAT.configure(text='''LAT:''')
-        self.TargetLAT.configure(width=20)        
+        self.TargetLAT.configure(width=40)        
 
         self.EntryX1 = Entry(self.PayloadFrame)
         #self.EntryX1.place(relx=0.17, rely=0.25, relheight=0.21, relwidth=0.61)
@@ -236,7 +236,7 @@ class UCLRUASNAV:
         self.TargetLONG.configure(highlightbackground="#d9d9d9")
         self.TargetLONG.configure(highlightcolor="black")
         self.TargetLONG.configure(text='''LONG:''')
-        self.TargetLONG.configure(width=20)
+        self.TargetLONG.configure(width=40)
 
         self.EntryY1 = Entry(self.PayloadFrame)
         #self.EntryY1.place(relx=0.17, rely=0.46, relheight=0.21, relwidth=0.61)
@@ -259,7 +259,7 @@ class UCLRUASNAV:
         self.DistTotal1.configure(highlightbackground="#d9d9d9")
         self.DistTotal1.configure(highlightcolor="black")
         self.DistTotal1.configure(text='''Dist to Target:''')
-        self.DistTotal1.configure(width=40)
+        self.DistTotal1.configure(width=60)
 
         self.EntryTotal1 = Entry(self.PayloadFrame)
         #self.EntryTotal1.place(relx=0.17, rely=0.67, relheight=0.21
