@@ -331,7 +331,7 @@ class UCLRUASNAV:
         self.btnProgram.configure(highlightbackground="#d9d9d9")
         self.btnProgram.configure(highlightcolor="black")
         self.btnProgram.configure(pady="0")
-        self.btnProgram.configure(text='''Start Prog''')
+        self.btnProgram.configure(text='''Start Program''')
 
         self.btnStopProgram = Button(self.BtnFrame)
         #self.btnStopProgram.place(relx=0.69, rely=0.88, height=24, width=57)
@@ -345,7 +345,7 @@ class UCLRUASNAV:
         self.btnStopProgram.configure(highlightbackground="#d9d9d9")
         self.btnStopProgram.configure(highlightcolor="black")
         self.btnStopProgram.configure(pady="0")
-        self.btnStopProgram.configure(text='''Stop Prog''')
+        self.btnStopProgram.configure(text='''Stop Program''')
 
         self.btnQuit = Button(self.BtnFrame)
         #self.btnQuit.place(relx=0.88, rely=0.88, height=24, width=34)
@@ -359,7 +359,7 @@ class UCLRUASNAV:
         self.btnQuit.configure(highlightbackground="#d9d9d9")
         self.btnQuit.configure(highlightcolor="black")
         self.btnQuit.configure(pady="0")
-        self.btnQuit.configure(text='''Quit''')
+        self.btnQuit.configure(text='''Quit       ''')
 
 
 
