@@ -359,7 +359,7 @@ class UCLRUASNAV:
         self.btnQuit.configure(highlightbackground="#d9d9d9")
         self.btnQuit.configure(highlightcolor="black")
         self.btnQuit.configure(pady="0")
-        self.btnQuit.configure(text='''Quit''')
+        self.btnQuit.configure(text='''X''')
 
 
 
