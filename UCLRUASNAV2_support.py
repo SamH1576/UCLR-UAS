@@ -71,6 +71,7 @@ def startMission(dataLAT, dataLONG):
         #GPSTarget = [51.520558, -0.138983]
         GPSTarget[0] = dataLAT
         GPSTarget[1] = dataLONG 
+        print GPSTarget
         print 'Starting mission'
         with q_lock:
             scrQueue.put(['EntryStatus','Starting payload mission'])
