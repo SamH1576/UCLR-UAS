@@ -62,13 +62,15 @@ def destroy_window():
     top_level.destroy()
     top_level = None
 
-def startMission():
+def startMission(dataLAT, dataLONG):
     global q_lock, onMission, VecCon
     missionNo = missiontype.get()
 
     if(missionNo == 1 and onMission!= True):
         onMission = True
-        GPSTarget = [51.520558, -0.138983]
+        #GPSTarget = [51.520558, -0.138983]
+        GPSTarget[0] = dataLAT
+        GPSTarget[1] = dataLONG 
         print 'Starting mission'
         with q_lock:
             scrQueue.put(['EntryStatus','Starting payload mission'])

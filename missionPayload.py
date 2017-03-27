@@ -26,8 +26,8 @@ def missionThread(VecCon, Target, payloadDeployed, q_lock, scrQueue):
         targetLONG = Target[1]
         dist2target = GPSDistanceConvertor.GPSXY(currLAT,currLONG,targetLAT,targetLONG)
         with q_lock:
-            scrQueue.put(['EntryX1',format(dist2target[0],'.4f')])
-            scrQueue.put(['EntryY1',format(dist2target[1],'.4f')])
+            #scrQueue.put(['EntryX1',format(dist2target[0],'.4f')])
+            #scrQueue.put(['EntryY1',format(dist2target[1],'.4f')])
             scrQueue.put(['EntryTotal1',format(dist2target[2],'.4f')])
         if(boolDrop(VecCon.MAVData['ALT'],dist2target[2],VecCon.MAVData['GSPD'])):
             payloadDeployed.set()
