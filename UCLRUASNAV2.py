@@ -23,7 +23,6 @@ def vp_start_gui():
     '''Starting point when module is the main routine.'''
     global val, w, root
     root = Tk()
-    root.attributes('-fullscreen', True)
     UCLRUASNAV2_support.set_Tk_var()
     top = UCLRUASNAV (root)
     UCLRUASNAV2_support.init(root, top)
