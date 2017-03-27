@@ -68,7 +68,7 @@ def startMission():
 
     if(missionNo == 1 and onMission!= True):
         onMission = True
-        GPSTarget = [-35.3615286,149.1617417]
+        GPSTarget = [51.520558, -0.138983]
         print 'Starting mission'
         with q_lock:
             scrQueue.put(['EntryStatus','Starting payload mission'])
