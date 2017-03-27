@@ -325,7 +325,7 @@ class UCLRUASNAV:
         self.btnProgram.configure(activebackground="#d9d9d9")
         self.btnProgram.configure(activeforeground="#000000")
         self.btnProgram.configure(background="#d9d9d9")
-        self.btnProgram.configure(command = lambda : UCLRUASNAV2_support.startMission(long(self.EntryX1["text"]),long(self.EntryY1["text"])))
+        self.btnProgram.configure(command = lambda : UCLRUASNAV2_support.startMission(float(self.EntryX1.get()),float(self.EntryY1.get())))
         self.btnProgram.configure(disabledforeground="#a3a3a3")
         self.btnProgram.configure(foreground="#000000")
         self.btnProgram.configure(highlightbackground="#d9d9d9")

@@ -8,22 +8,22 @@ global p_mass, g, dropped
 p_mass = 1
 g = 9.81
 
-def startMission(VecCon, Target, payloadDeployed, q_lock, scrQueue):
+def startMission(VecCon, dataLAT, dataLONG, payloadDeployed, q_lock, scrQueue):
     with q_lock:
         scrQueue.put(['EntryStatus','Mission starting'])
-    missThread = threading.Thread(target=missionThread, args=(VecCon, Target, payloadDeployed, q_lock, scrQueue,))
+    missThread = threading.Thread(target=missionThread, args=(VecCon, dataLAT, dataLONG, payloadDeployed, q_lock, scrQueue,))
     missThread.setDaemon(True) #ie when the module exits: kill thread
     missThread.start()
     with q_lock:
         scrQueue.put(['EntryStatus','Mission started'])
 
-def missionThread(VecCon, Target, payloadDeployed, q_lock, scrQueue):
+def missionThread(VecCon, dataLAT, dataLONG, payloadDeployed, q_lock, scrQueue):
     while(payloadDeployed.isSet() == False):
         VecCon.getGPSdata()
         currLAT = VecCon.MAVData['LAT']
         currLONG = VecCon.MAVData['LONG']
-        targetLAT = Target[0]
-        targetLONG = Target[1]
+        targetLAT = dataLAT
+        targetLONG = dataLONG
         dist2target = GPSDistanceConvertor.GPSXY(currLAT,currLONG,targetLAT,targetLONG)
         with q_lock:
             #scrQueue.put(['EntryX1',format(dist2target[0],'.4f')])

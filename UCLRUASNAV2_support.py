@@ -63,15 +63,15 @@ def destroy_window():
     top_level = None
 
 def startMission(dataLAT, dataLONG):
-    global q_lock, onMission, VecCon
+    global q_lock, onMission, VecCon, GPSTarget
     missionNo = missiontype.get()
 
     if(missionNo == 1 and onMission!= True):
         onMission = True
         #GPSTarget = [51.520558, -0.138983]
-        GPSTarget[0] = dataLAT
-        GPSTarget[1] = dataLONG 
-        print GPSTarget
+        # GPSTarget[0] = dataLAT
+        # GPSTarget[1] = dataLONG 
+        print dataLAT, dataLONG
         print 'Starting mission'
         with q_lock:
             scrQueue.put(['EntryStatus','Starting payload mission'])
@@ -83,7 +83,7 @@ def startMission(dataLAT, dataLONG):
                 scrQueue.put(['EntryStatus','Initialising mission thread'])
             global payloadDeployed
             payloadDeployed = threading.Event()
-            missionPayload.startMission(VecCon, GPSTarget, payloadDeployed, q_lock, scrQueue)
+            missionPayload.startMission(VecCon, dataLAT, dataLONG, payloadDeployed, q_lock, scrQueue)
             missionThread = threading.Thread(name= 'currMission', target=missionReply, args=(payloadDeployed, VecCon))
             missionThread.setDaemon(True) #ie when the module exits: kill thread
             missionThread.start()
