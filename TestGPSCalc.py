@@ -2,7 +2,7 @@ from IRS import missionRecon
 import csv
 
 
-with open('SampleGPSBearingData.csv', 'rb') as f:
+with open('SampleData.csv', 'rb') as f:
     reader = csv.reader(f)
     your_list = list(reader)
 
