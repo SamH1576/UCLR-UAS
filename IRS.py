@@ -91,7 +91,7 @@ class detectTarget:
                 #determine centroid and area
                 centre = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
                 area = M["m00"]
-                if(area>200):
+                if(area>50):
                         centred = self.moveCamera(centre[0], orig.shape[1]/2)
                         return True, centred
                 else:
@@ -423,6 +423,7 @@ def main1():
 		pass
         #cv2.destroyAllWindows()
         d.m.move_to(0)
+        #print('T')
         print(d.runOCR())
         d.cleanImagesFolder()
         time.sleep(3)
@@ -433,4 +434,4 @@ def main1():
 #if module is being run stand alone, run the following
 if __name__ == "__main__":
         print 'running stand alone'
-        main()
+        main1()

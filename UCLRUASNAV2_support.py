@@ -111,7 +111,7 @@ def missionReply(payloadDeployed, VecCon):
     onMission = False
 
 def startMAVComms():
-    NewConnection = MAVComms.MAVconnect('udp:127.0.0.1:10') 
+    NewConnection = MAVComms.MAVconnect('/dev/ttyACM0') 
     while(NewConnection.Connecting):
         #waiting to finish connecting
         pass
