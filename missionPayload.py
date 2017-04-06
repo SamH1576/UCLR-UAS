@@ -60,20 +60,27 @@ def boolDrop(alt, hypdist, vel):
 
 if __name__ == '__main__':
     import MAVComms
+    import RPi.GPIO as GPIO
 
     def startMAVComms():
-    #NewConnection = MAVComms.MAVconnect('/dev/ttyACM0')
-    NewConnection = MAVComms.MAVconnect('udp:0.0.0.0:15440') 
-    while(NewConnection.Connecting):
+        #NewConnection = MAVComms.MAVconnect('/dev/ttyACM0'
+        NewConnection = MAVComms.MAVconnect('udp:0.0.0.0:15440') 
+        while(NewConnection.Connecting):
         #waiting to finish connecting
-        pass
+            pass
         
-    if(NewConnection.ConnErrFlag != True):
-        return NewConnection
-    else:
-        return None
+        if(NewConnection.ConnErrFlag != True):
+            return NewConnection
+        else:
+            return None
 
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(18, GPIO.OUT)
+    pwm = GPIO.PWM(18, 100)
+    pwm.start(5)
 
+    dataLAT = -35.3628848
+    dataLONG = 149.1625705
     VecCon = startMAVComms()
     dropped = False
     while(dropped == False):
@@ -85,11 +92,15 @@ if __name__ == '__main__':
         dist2target = GPSDistanceConvertor.GPSXY(currLAT,currLONG,targetLAT,targetLONG)
         print format(dist2target[2],'.4f')
         if(boolDrop(VecCon.MAVData['ALT'],dist2target[2],VecCon.MAVData['GSPD'])):
+	    pwm.ChangeDutyCycle(21.5)	    
             dropped = True
+	    time.sleep(1)
             GPSdropLocation = currLAT, currLONG
         else:
             time.sleep(0.5)
             pass
-
+    print('-----------')
+    print('Payload Deployed')
+    print GPSdropLocation
     VecCon.disconnectMAV()
     VecCon = None
