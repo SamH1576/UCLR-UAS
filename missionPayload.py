@@ -61,6 +61,19 @@ def boolDrop(alt, hypdist, vel):
 if __name__ == '__main__':
     import MAVComms
 
+    def startMAVComms():
+    #NewConnection = MAVComms.MAVconnect('/dev/ttyACM0')
+    NewConnection = MAVComms.MAVconnect('udp:0.0.0.0:15440') 
+    while(NewConnection.Connecting):
+        #waiting to finish connecting
+        pass
+        
+    if(NewConnection.ConnErrFlag != True):
+        return NewConnection
+    else:
+        return None
+
+
     VecCon = startMAVComms()
     dropped = False
     while(dropped == False):
