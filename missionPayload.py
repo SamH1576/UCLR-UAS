@@ -5,7 +5,7 @@ import threading
 
 ##Payload Parameters
 global p_mass, g, dropped
-p_mass = 1
+p_mass = 0.2
 g = 9.81
 
 def startMission(VecCon, dataLAT, dataLONG, payloadDeployed, q_lock, scrQueue):
@@ -56,3 +56,27 @@ def boolDrop(alt, hypdist, vel):
         return True
     else:
         return False
+
+
+if __name__ == '__main__':
+    import MAVComms
+
+    VecCon = startMAVComms()
+    dropped = False
+    while(dropped == False):
+        VecCon.getGPSdata()
+        currLAT = VecCon.MAVData['LAT']
+        currLONG = VecCon.MAVData['LONG']
+        targetLAT = dataLAT
+        targetLONG = dataLONG
+        dist2target = GPSDistanceConvertor.GPSXY(currLAT,currLONG,targetLAT,targetLONG)
+        print format(dist2target[2],'.4f')
+        if(boolDrop(VecCon.MAVData['ALT'],dist2target[2],VecCon.MAVData['GSPD'])):
+            dropped = True
+            GPSdropLocation = currLAT, currLONG
+        else:
+            time.sleep(0.5)
+            pass
+
+    VecCon.disconnectMAV()
+    VecCon = None
