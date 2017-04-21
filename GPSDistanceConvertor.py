@@ -77,13 +77,13 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
     else:
         East = False
 
-    if(bearing2>=90 and bearing<=270 and South):
+    if(bearing2>=90 and bearing2<=270 and South):
         #bearing pointing south, Yout cannot be above y1
         South = True
     else:
         South = False
 
-    if(bearing1>0 and bearing1<180 and East):
+    if(bearing2>0 and bearing2<180 and East):
         #pointing East, so Xout cannot be less than x1
         East = True
     else:

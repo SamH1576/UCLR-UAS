@@ -63,8 +63,8 @@ if __name__ == '__main__':
     import RPi.GPIO as GPIO
 
     def startMAVComms():
-        #NewConnection = MAVComms.MAVconnect('/dev/ttyACM0'
-        NewConnection = MAVComms.MAVconnect('udp:0.0.0.0:15440') 
+        NewConnection = MAVComms.MAVconnect('/dev/ttyACM0')
+        #NewConnection = MAVComms.MAVconnect('udp:0.0.0.0:15440') 
         while(NewConnection.Connecting):
         #waiting to finish connecting
             pass
@@ -79,8 +79,8 @@ if __name__ == '__main__':
     pwm = GPIO.PWM(18, 100)
     pwm.start(5)
 
-    dataLAT = -35.3628848
-    dataLONG = 149.1625705
+    dataLAT = 51.522198
+    dataLONG = -0.2423644
     VecCon = startMAVComms()
     dropped = False
     while(dropped == False):
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         dist2target = GPSDistanceConvertor.GPSXY(currLAT,currLONG,targetLAT,targetLONG)
         print format(dist2target[2],'.4f')
         if(boolDrop(VecCon.MAVData['ALT'],dist2target[2],VecCon.MAVData['GSPD'])):
-	    pwm.ChangeDutyCycle(21.5)	    
+	    pwm.ChangeDutyCycle(12.5)	    
             dropped = True
 	    time.sleep(1)
             GPSdropLocation = currLAT, currLONG
