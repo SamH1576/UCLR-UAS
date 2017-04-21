@@ -64,6 +64,7 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
     theta1 = numpy.radians(bearing1)
     theta2 = numpy.radians(bearing2)
     
+
     if(bearing1>=90 and bearing1<=270):
         #bearing pointing south, Yout cannot be above y1
         South = True
@@ -75,6 +76,19 @@ def BearingMeet(x1,y1,x2,y2,bearing1,bearing2):
         East = True
     else:
         East = False
+
+    if(bearing2>=90 and bearing<=270 and South):
+        #bearing pointing south, Yout cannot be above y1
+        South = True
+    else:
+        South = False
+
+    if(bearing1>0 and bearing1<180 and East):
+        #pointing East, so Xout cannot be less than x1
+        East = True
+    else:
+        East = False
+        
     #a special case is when bearing1 or bearing2 equals 0, in which case Xout will equal x1 or x2 depending on which bearing is 0
     if(bearing1 != 0 and bearing2 != 0):      
         Xout = ((x2*(1/numpy.tan(theta2))) - (x1*(1/numpy.tan(theta1))) + y1 - y2)/((1/numpy.tan(theta2)) - (1/numpy.tan(theta1)))
